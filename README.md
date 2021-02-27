@@ -19,7 +19,10 @@
   - Please ask general questions and report minor issues there about substrate and development with it **before you post here**.
   - We can direct you to topical channels there for things like testnet, faucets, other parity projects, and more. 
 
-### :thinking: Anything that isn't addressed immediately, please use post a question or error report on [Stack Overflow (tagged `substrate`](https://stackoverflow.com/questions/tagged/substrate)
-### :confounded: For more broad problems, seach in [open and clossed issues](https://github.com/paritytech/subport/issues?q=is%3Aissue) **first** (and on stack overflow), then if you can't find an answer, please report them here by [opening an issue](https://github.com/paritytech/subport/issues/new)
+### :thinking: Anything that isn't addressed immediately in the chat
+- Please **first seach** for your question or error on [Stack Overflow (tagged `substrate`](https://stackoverflow.com/questions/tagged/substrate))
+  - *Only* if nothing is related, then post a new onem be sure to tage it `substrate` at a minimum (also `blockchain`, `polkadot-js`, and any other relevant flag)
+- For more broad problems, **first** seach in [open and clossed issues](https://github.com/paritytech/subport/issues?q=is%3Aissue), then if you can't find an answer, please report them here by [opening an issue](https://github.com/paritytech/subport/issues/new)
 
 ### :bulb: For longer form ideas and feature requests, first [look at open discussions](https://github.com/paritytech/subport/discussions/) and if there isn't one, [start a discussion](https://github.com/paritytech/subport/discussions/new) :family:
+- We are always looking for great ideas and great people to discuss them with! [Substrate Technical](https://app.element.io/#/room/#substrate-technical:matrix.org) is the best place for short form, where discussions here are better for focused long form discussions. 

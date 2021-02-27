@@ -1,5 +1,5 @@
 # Subport
-### [Parity](https://parity.io) Technologies [Substrate](https://substrate.dev)(-based) chains usage and development support
+### [Substrate](https://substrate.dev)(-based) chains usage and development support
 
 ## How to Get Help:
 

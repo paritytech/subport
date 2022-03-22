@@ -82,7 +82,7 @@ body:
     attributes:
       label: Anything else we should know?
       description: Please let the Rococo team know anything else about this request, and details about your 
-      value: "{So... We want to start a XCM channel with X parachain with Y para ID...}""
+      value: So... We want to start a XCM channel with X parachain with Y para ID...
     validations:
       required: false
   - type: textarea

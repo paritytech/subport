@@ -5,9 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        # ***BEFORE you continue***
-        
-        ### Please complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!"
+        ## BEFORE you continue complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!"
   - type: checkboxes
     id: tutorial-complete
     attributes:

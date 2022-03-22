@@ -6,6 +6,7 @@ body:
     attributes:
       value: "***BEFORE you continue***: Please complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!"
   - type: checkboxes
+    id: tutorial-complete
     attributes:
       label: You completed the Cumulus Tutorial for your parachian and tested locally?
       description: "We _insist_ that you have tested locally with `rococo-local` at the identical version of the presently running Rococo is using _before_ you can apply for a slot!"
@@ -37,6 +38,7 @@ body:
     validations:
       required: true
   - type: checkboxes
+    id: para-id-no-confict
     attributes:
       label: This para ID does NOT conflict with another Rococo para ID?
       description: Please check to see if this para ID you have a legitimate claim on. 
@@ -44,6 +46,7 @@ body:
         - label: Yes, we doubled-checked it's free, or we reserved this para ID explicitly. 
           required: true
   - type: dropdown
+    id: slot-term
     attributes:
       label: Is this a request for a long term slot? 
       description: Please search to see if an issue already exists and leave a comment that you also experienced this issue or add your specifics that are related to an existing issue.
@@ -85,7 +88,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: chain-spec
+    id: apps-ui-pr
     attributes:
       label: Register your Rococo parachain details for `polakdot-js/apps`
       description: "So that users can identify what chain you are using, please submit a PR to <https://github.com/polkadot-js/apps/> to include your details on the UI"

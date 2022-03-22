@@ -8,7 +8,7 @@ body:
   - type: checkboxes
     id: tutorial-complete
     attributes:
-      label: You completed the Cumulus Tutorial for your parachian and tested locally?
+      label: You completed the Cumulus Tutorial for your parachain and tested locally?
       description: "We _insist_ that you have tested locally with `rococo-local` at the identical version of the presently running Rococo is using _before_ you can apply for a slot!"
       options:
         - label: "Yes, we have successfully tested our chain on `rococo-local`."
@@ -59,40 +59,43 @@ body:
     id: genesis
     attributes:
       label: Upload your Genesis Head (genesis state)
-      description: Drag & drop or upload the genesis file, or provide a link to this file to download
-      # placeholder: "Example: " 
+      placeholder: Drag & drop or upload the genesis file, or provide a link to this file to download
     validations:
       required: true
   - type: textarea
     id: wasm
     attributes:
       label: Upload your Validation Code (genesis runtime Wasm)
-      description: Drag & drop or upload the Wasm runtime file associated with your genesis
-      # placeholder: "Example: " 
+      placeholder: Drag & drop or upload the Wasm runtime file associated with your genesis
     validations:
       required: true
   - type: textarea
     id: chain-spec
     attributes:
       label: (Optional) Upload your Chain Specification
-      description: Drag & drop or upload the Wasm runtime file associated with your genesis
-      placeholder: "Example: https://github.com/paritytech/polkadot/blob/master/node/service/res/rococo.json"
+      description: "Example: https://github.com/paritytech/polkadot/blob/master/node/service/res/rococo.json"
+      placeholder: Drag & drop or upload the chain spec file associated with your genesis
     validations:
-      required: true
+      required: false
   - type: textarea
     id: what-else
     attributes:
       label: Anything else we should know?
       description: Please let the Rococo team know anything else about this request, and details about your 
-      placeholder: We want to start a XCM channel with X parachain with Y para ID...
+      value: "{So... We want to start a XCM channel with X parachain with Y para ID...}""
     validations:
       required: false
   - type: textarea
     id: apps-ui-pr
     attributes:
       label: Register your Rococo parachain details for `polakdot-js/apps`
-      description: "So that users can identify what chain you are using, please submit a PR to <https://github.com/polkadot-js/apps/> to include your details on the UI"
-      placeholder: |
+      description: |
+        So that users can identify what chain you are using, please submit a PR to <https://github.com/polkadot-js/apps/> to include your details on the UI
+
+        **Example PR: https://github.com/polkadot-js/apps/pull/7180/files**
+
+        You _may_ leave this as the default text below, but need to add the PR when it's in started or merged/
+      value: |
         <!-- Example PR: https://github.com/polkadot-js/apps/pull/7180/files -->
         - [ ] Polkadot-js Apps UI PR completed
           - Available here: {FIX ME!!!!}  

@@ -94,8 +94,10 @@ body:
 
         **Example PR: https://github.com/polkadot-js/apps/pull/7180/files**
 
-        You _may_ leave this as the default text below, but need to add the PR when it's in started or merged/
+        You _may_ leave this as the default text below, but need to add the PR when it's in started or merged.
       value: |
+        <!-- You _may_ leave this as the default text below, but need to add the PR when it's in started or merged -->
+        
         <!-- Example PR: https://github.com/polkadot-js/apps/pull/7180/files -->
         - [ ] Polkadot-js Apps UI PR completed
           - Available here: {FIX ME!!!!}  

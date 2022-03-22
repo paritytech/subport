@@ -1,10 +1,13 @@
 name: Rococo Slot Request
-description: Please fill out this for for a short or long-term slot on Rococo (described in the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/rococo/))
+description: Please fill out this for for a short or long-term slot on Rococo
 labels: ["Rococo"]
 body:
   - type: markdown
     attributes:
-      value: "***BEFORE you continue***: Please complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!"
+      value: |
+        # ***BEFORE you continue***
+        
+        ### Please complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!"
   - type: checkboxes
     id: tutorial-complete
     attributes:
@@ -97,7 +100,7 @@ body:
         You _may_ leave this as the default text below, but need to add the PR when it's in started or merged.
       value: |
         <!-- You _may_ leave this as the default text below, but need to add the PR when it's in started or merged -->
-        
+
         <!-- Example PR: https://github.com/polkadot-js/apps/pull/7180/files -->
         - [ ] Polkadot-js Apps UI PR completed
           - Available here: {FIX ME!!!!}  

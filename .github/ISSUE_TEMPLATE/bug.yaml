@@ -1,0 +1,97 @@
+name: Rococo Slot Request
+description: Please fill out this for for a short or long-term slot on Rococo (described in the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/rococo/))
+labels: ["Rococo"]
+body:
+  - type: markdown
+    attributes:
+      value: "***BEFORE you continue***: Please complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!"
+  - type: checkboxes
+    attributes:
+      label: You completed the Cumulus Tutorial for your parachian and tested locally?
+      description: "We _insist_ that you have tested locally with `rococo-local` at the identical version of the presently running Rococo is using _before_ you can apply for a slot!"
+      options:
+        - label: "Yes, we have successfully tested our chain on `rococo-local`."
+          required: true
+  - type: input
+    id: team-name
+    attributes:
+      label: Team Name
+      description: "The company, group, or individual requesting the slot." 
+      placeholder: "Example: Parity Technologies"
+    validations:
+      required: true
+  - type: input
+    id: para-name
+    attributes:
+      label: Parachain Name
+      description: "The name of your Parachain" 
+      placeholder: "Example: Rocmint" 
+    validations:
+      required: true
+  - type: input
+    id: para-id
+    attributes:
+      label: ParaID
+      description: "The para ID that you ***compiled in your chainspec***; associated with the state and wasm have been built for. this ***MUST NOT** If a LONG TERM slot, this should ***match the chain you have a slot on for Kusama and/or Polkadot." 
+      placeholder: "Example: 2000" 
+    validations:
+      required: true
+  - type: checkboxes
+    attributes:
+      label: This para ID does NOT conflict with another Rococo para ID?
+      description: Please check to see if this para ID you have a legitimate claim on. 
+      options:
+        - label: Yes, we doubled-checked it's free, or we reserved this para ID explicitly. 
+          required: true
+  - type: dropdown
+    attributes:
+      label: Is this a request for a long term slot? 
+      description: Please search to see if an issue already exists and leave a comment that you also experienced this issue or add your specifics that are related to an existing issue.
+      options:
+        - Short term, we don't have a matching para ID in use on Polkadot or Kusama.
+        - Long term, we do have a matching para ID in use on Polkadot or Kusama.
+    validations:
+      required: true
+  - type: textarea
+    id: genesis
+    attributes:
+      label: Upload your Genesis Head (genesis state)
+      description: Drag & drop or upload the genesis file, or provide a link to this file to download
+      # placeholder: "Example: " 
+    validations:
+      required: true
+  - type: textarea
+    id: wasm
+    attributes:
+      label: Upload your Validation Code (genesis runtime Wasm)
+      description: Drag & drop or upload the Wasm runtime file associated with your genesis
+      # placeholder: "Example: " 
+    validations:
+      required: true
+  - type: textarea
+    id: chain-spec
+    attributes:
+      label: (Optional) Upload your Chain Specification
+      description: Drag & drop or upload the Wasm runtime file associated with your genesis
+      placeholder: "Example: https://github.com/paritytech/polkadot/blob/master/node/service/res/rococo.json"
+    validations:
+      required: true
+  - type: textarea
+    id: what-else
+    attributes:
+      label: Anything else we should know?
+      description: Please let the Rococo team know anything else about this request, and details about your 
+      placeholder: We want to start a XCM channel with X parachain with Y para ID...
+    validations:
+      required: false
+  - type: textarea
+    id: chain-spec
+    attributes:
+      label: Register your Rococo parachain details for `polakdot-js/apps`
+      description: "So that users can identify what chain you are using, please submit a PR to <https://github.com/polkadot-js/apps/> to include your details on the UI"
+      placeholder: |
+        <!-- Example PR: https://github.com/polkadot-js/apps/pull/7180/files -->
+        - [ ] Polkadot-js Apps UI PR completed
+          - Available here: {FIX ME!!!!}  
+    validations:
+      required: true

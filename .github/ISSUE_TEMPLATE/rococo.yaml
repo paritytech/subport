@@ -1,5 +1,5 @@
 name: Rococo Slot Request
-description: Please fill out this for for a short or long-term slot on Rococo
+description: "Please request a new slot on Rococo, and if you need support on for your team using this slot, use the issue itself for futher request (like opening VMP channels with Rococo or using `sudo` on Rococo for you)"
 labels: ["Rococo"]
 body:
   - type: markdown
@@ -96,3 +96,7 @@ body:
           - Available here: {FIX ME!!!!}  
     validations:
       required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## BEFORE you continue complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!

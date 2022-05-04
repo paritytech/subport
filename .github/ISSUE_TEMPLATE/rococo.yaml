@@ -18,7 +18,7 @@ body:
     id: team-name
     attributes:
       label: Team Name
-      description: "The company, group, or individual requesting the slot." 
+      description: "The company, group, or individual requesting the slot."
       placeholder: "Example: Parity Technologies"
     validations:
       required: true
@@ -26,15 +26,15 @@ body:
     id: para-name
     attributes:
       label: Parachain Name
-      description: "The name of your Parachain" 
-      placeholder: "Example: Rocmint" 
+      description: "The name of your Parachain"
+      placeholder: "Example: Rocmint"
     validations:
       required: true
   - type: input
     id: para-id
     attributes:
       label: ParaID
-      description: "The paraID that you ***compiled in your chainspec***. If **short-term**, this should already be registed on Rococo with the associated with the genesis state and Wasm for the paraID. If a **long-term** slot, this should ***match the chain you have a slot on for Kusama and/or Polkadot***!" 
+      description: "The paraID that you ***compiled in your chainspec***. If **short-term**, this should already be registered on Rococo with the associated with the genesis state and Wasm for the paraID. If a **long-term** slot, this should ***match the chain you have a slot on for Kusama and/or Polkadot***!"
       placeholder: "Example: 3000"
     validations:
       required: true
@@ -44,10 +44,10 @@ body:
       label: Is this for a short or long term slot?
       description: "If short-term, please **double-check the paraID you registered as a parathread is in place**. If long-term, please ensure your paraID from Kusama/Polkadot is free/unused on Rococo."
       options:
-        - "Short-term: we registed a parathread with the paraID above."
+        - "Short-term: we registered a parathread with the paraID above."
         - "Long-term: we have a matching paraID in use on Polkadot or Kusama."
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     id: genesis
     attributes:
@@ -74,14 +74,14 @@ body:
     id: what-else
     attributes:
       label: Anything else we should know?
-      description: Please let the Rococo team know anything else about this request, and details about your 
+      description: Please let the Rococo team know anything else about this request, and details about your
       value: So... We want to start a XCM channel with X parachain with Y paraID...
     validations:
       required: false
   - type: textarea
     id: apps-ui-pr
     attributes:
-      label: Register your Rococo parachain details for `polakdot-js/apps`
+      label: Register your Rococo parachain details for `polkadot-js/apps`
       description: |
         So that users can identify what chain you are using, please submit a PR to <https://github.com/polkadot-js/apps/> to include your details on the UI
 
@@ -93,10 +93,10 @@ body:
 
         <!-- Example PR: https://github.com/polkadot-js/apps/pull/7180/files -->
         - [ ] Polkadot-js Apps UI PR completed
-          - Available here: {FIX ME!!!!}  
+          - Available here: {FIX ME!!!!}
     validations:
       required: true
   - type: markdown
     attributes:
       value: |
-        ### If you need support for your team related to this slot, please use this issue for futher requests. Like opening VMP channels with Rococo or using `sudo` on Rococo for your team.
+        ### If you need support for your team related to this slot, please use this issue for further requests. Like opening VMP channels with Rococo or using `sudo` on Rococo for your team.

@@ -5,11 +5,11 @@ body:
   - type: markdown
     attributes:
       value: |
-        ## BEFORE you continue complete the [Cumulus Tutorial](https://docs.substrate.io/tutorials/v3/cumulus/)!
+        ## BEFORE you continue complete the [Parachain Tutorials](https://docs.substrate.io/tutorials/connect-other-chains/)!
   - type: checkboxes
     id: tutorial-complete
     attributes:
-      label: You completed the Cumulus Tutorial for your parachain and tested locally?
+      label: You completed the Parachain Tutorials for your parachain and tested locally?
       description: "We _insist_ that you have tested locally with `rococo-local` at the identical version of the presently running Rococo is using _before_ you can apply for a slot!"
       options:
         - label: "Yes, we have successfully tested our chain on `rococo-local`."

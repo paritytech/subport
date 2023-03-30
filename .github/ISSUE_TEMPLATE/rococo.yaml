@@ -38,6 +38,14 @@ body:
       placeholder: "Example: 3000"
     validations:
       required: true
+  - type: input
+    id: manager-account
+    attributes:
+      label: Parachain Manager Account
+      description: "A Rococo account that would be set as the manager for this parachain. You might have already set one if you have registered the parachain on your own, please use the same account when filling this field."
+      placeholder: "Example:5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
+    validations:
+      required: true
   - type: dropdown
     id: para-id-term
     attributes:

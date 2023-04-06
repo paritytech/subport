@@ -8,7 +8,7 @@
   - Concepts and Archetechture of Polkadot applies to many substrate based blockchains!
 - [Substrate Devhub](https://substrate.dev/)
   - [Knowledge base](https://substrate.dev/docs/en/) for concepts, terms, and more
-  - [Tutorials](https://substrate.dev/en/tutorials) to try things out
+  - [Tutorials](https://docs.substrate.io/tutorials/) to try things out
   - [Recipes](https://substrate.dev/recipes/) to get examples to put into your custom solution & pro tips
   - [Rustdocs](https://substrate.dev/rustdocs) for the API that substrate exposes (and more)
 - [Substrate Codebase](https://github.com/paritytech/substrate)

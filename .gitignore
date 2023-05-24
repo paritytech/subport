@@ -1,0 +1,6 @@
+/cli/target
+/cli/.env
+.DS_STORE
+/.DS_STORE
+/cli/.Cargo.lock
+.Cargo.lock

@@ -1,3 +1,4 @@
+# PARA-ONBOARDING
 The logic in this repo implements the following flow for onboarding parachains to substrate based relay chain
 
 -   [ ] Team provides paraID + Account Address
@@ -7,3 +8,6 @@ The logic in this repo implements the following flow for onboarding parachains t
 -   [ ] Daily tasks - Open all HRMP channels with active para sets
 
 ![para-onboarding-flow](./assets/para-onboarding-flow.png)
+
+### CLI
+See how to run the CLI locally [here](cli/README.md).

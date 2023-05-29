@@ -11,3 +11,4 @@ The logic in this repo implements the following flow for onboarding parachains t
 
 ### CLI
 See how to run the CLI locally [here](cli/README.md).
+

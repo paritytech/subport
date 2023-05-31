@@ -3,5 +3,5 @@
 .env
 .DS_STORE
 /.DS_STORE
-/.Cargo.lock
-.Cargo.lock
+/Cargo.lock
+Cargo.lock

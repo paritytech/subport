@@ -31,10 +31,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Err(v) => Err(format!("Error querying the chain: {}", v))?
     };
     if is_exists {
+        // Chain exists on Polkadot/Kusama -> long term
         println!("Parachain exists");
     }
     else {
-        println!("Parachain does not exist");
+        // Chain does not exist on Polkadot/Kusama -> short term
+        println!("This parachain does not exist");
     }
     
     Ok(())

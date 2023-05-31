@@ -33,3 +33,7 @@ subxt metadata --url https://rpc.polkadot.io:443 -f bytes > polkadot-metadata.sc
 subxt metadata --url https://kusama-rpc.polkadot.io:443 -f bytes > kusama-metadata.scale
 subxt metadata --url https://rococo-rpc.polkadot.io:443 -f bytes > rococo-metadata.scale
 ```
+
+### Secret Keys
+Create a `.env` file and add the variable `SEED` with your seed key like in the `.env.example` file
+This allows you to do queries into Rococo (as a sudo)

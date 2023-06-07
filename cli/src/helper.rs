@@ -17,7 +17,6 @@ pub async fn needs_perm_slot(
     
     let polkadot_api = OnlineClient::<PolkadotConfig>::from_url("wss://rpc.polkadot.io:443").await?;
     let kusama_api = OnlineClient::<PolkadotConfig>::from_url("wss://kusama-rpc.polkadot.io:443").await?;
-    let _rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
 
     let lease_polkadot = maybe_leases(
         polkadot_api,
@@ -31,8 +30,22 @@ pub async fn needs_perm_slot(
         para_id
     ).await;
 
-    if lease_kusama.unwrap() || lease_polkadot.unwrap() {
-        println!("ParaId: {} needs a permanent slot", para_id);
-        Ok(true)
-    } else { Ok(false) }
+    if lease_kusama.unwrap() || lease_polkadot.unwrap() { Ok(true) } else { Ok(false) }
+}
+
+// Returns if the passed para_id already has a slot in Rococo
+pub async fn has_slot_in_rococo(
+    para_id: u32
+) -> Result<bool, Box<dyn std::error::Error>> {
+    
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
+
+    let lease_rococo = maybe_leases(
+        rococo_api,
+        Chain::ROC,
+        para_id
+    ).await;
+
+    if lease_rococo.unwrap() { Ok(true)} 
+    else { Ok(false) }
 }

@@ -59,14 +59,14 @@ body:
   - type: textarea
     id: genesis
     attributes:
-      label: Upload your Genesis Head (genesis state)
+      label: Upload your Genesis Head (genesis state) - Do not submit a compressed file.
       placeholder: Drag & drop or upload the genesis file, or provide a link to this file to download
     validations:
       required: true
   - type: textarea
     id: wasm
     attributes:
-      label: Upload your Validation Code (genesis runtime Wasm)
+      label: Upload your Validation Code (genesis runtime Wasm) - Do not submit a compressed file.
       placeholder: Drag & drop or upload the Wasm runtime file associated with your genesis
     validations:
       required: true

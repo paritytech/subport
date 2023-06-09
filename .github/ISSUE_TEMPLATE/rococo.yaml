@@ -1,6 +1,6 @@
 name: Rococo Slot Request
 description: "Please use this issue for requests related to your slot on Rococo"
-labels: ["Rococo"]
+labels: [Rococo]
 body:
   - type: markdown
     attributes:

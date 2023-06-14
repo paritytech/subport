@@ -20,12 +20,14 @@ Arguments:
   <ACCOUNT_ADDRESS>  Manager Address
 
 Options:
-  -h, --help  Print help
+  -g, --path-genesis-head <PATH_GENESIS_HEAD>        Path to a file with a genesis head
+  -v, --path-validation-code <PATH_VALIDATION_CODE>  Path to the wasm file
+  -h, --help                                         Print help
 ```
 
 Run locally:
 ```shell
-cargo run para_id account_address
+cargo run para_id account_address -g genesis_head -v validation_code
 ```
 The metadata used for subxt has been queried with:
 ```shell

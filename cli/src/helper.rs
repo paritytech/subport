@@ -2,7 +2,7 @@ use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
 use crate::calls::force_register;
-use crate::query::maybe_leases;
+use crate::query::{maybe_leases, paras_registered};
 
 pub enum Chain {
     DOT,
@@ -34,10 +34,23 @@ pub async fn needs_perm_slot(para_id: u32) -> Result<bool, Box<dyn std::error::E
 pub async fn has_slot_in_rococo(para_id: u32) -> Result<bool, Box<dyn std::error::Error>> {
     // let rococo_api =
     //     OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://127.0.0.1:56759").await?;
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
     let lease_rococo = maybe_leases(rococo_api, Chain::ROC, para_id).await;
 
     if lease_rococo.unwrap() {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
+}
+
+// Check if the parachain is registerd  in Rococo
+pub async fn is_registered(para_id: u32) -> Result<bool, Box<dyn std::error::Error>> {
+    // let rococo_api =
+    //     OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    let is_registered_in_rococo = paras_registered(rococo_api, para_id).await;
+    if is_registered_in_rococo.unwrap() {
         Ok(true)
     } else {
         Ok(false)
@@ -60,13 +73,12 @@ pub async fn register(
 
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
-    let lease_rococo = force_register(
+    force_register(
         rococo_api,
         para_id,
         account_manager,
         genesis_head,
         validation_code,
     )
-    .await;
-    Ok(())
+    .await
 }

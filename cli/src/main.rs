@@ -1,5 +1,5 @@
 use clap::Parser;
-use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register};
+use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_registered};
 use std::{fs, path::PathBuf};
 use subxt::{tx::PairSigner, utils::AccountId32};
 
@@ -22,8 +22,9 @@ struct Cli {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::parse();
 
-    let has_already_exist: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
-    if has_already_exist {
+    // Don't the anything if the ParaID already has an slot in Rococo
+    let has_already_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
+    if has_already_slot {
         println!(
             "Error: ParaId: {} already has a slot in Rococo",
             args.para_id
@@ -31,13 +32,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Ok(());
     }
 
-    register(
-        args.para_id,
-        args.account_address,
-        args.path_validation_code,
-        args.path_genesis_head,
-    )
-    .await?;
+    // If the ParaID is not registered (Parachain or Parathread), register it with sudo
+    let is_registered = is_registered(args.para_id).await;
+    if !is_registered.unwrap() {
+        register(
+            args.para_id,
+            args.account_address,
+            args.path_validation_code,
+            args.path_genesis_head,
+        )
+        .await?;
+    }
+
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);
 

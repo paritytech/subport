@@ -1,7 +1,8 @@
 use clap::Parser;
+use std::{path::PathBuf};
+use subxt::{utils::AccountId32};
+use dotenv::dotenv;
 use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_registered};
-use std::{fs, path::PathBuf};
-use subxt::{tx::PairSigner, utils::AccountId32};
 
 #[derive(Parser, Debug)]
 #[command(about = "CLI tool to onboard parachains.")]
@@ -20,6 +21,7 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    dotenv().ok();
     let args = Cli::parse();
 
     // Don't the anything if the ParaID already has an slot in Rococo

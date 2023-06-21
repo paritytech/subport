@@ -1665,6 +1665,7 @@ dependencies = [
  "clap",
  "dotenv",
  "parity-scale-codec",
+ "sp-core",
  "sp-keyring",
  "subxt",
  "tokio",

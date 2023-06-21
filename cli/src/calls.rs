@@ -1,6 +1,6 @@
 use crate::helper::Api;
-use sp_keyring::AccountKeyring;
-use subxt::{tx::PairSigner, utils::AccountId32};
+use subxt::{tx::PairSigner, utils::AccountId32, PolkadotConfig};
+use sp_core::Pair;
 
 // #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 // pub mod rococo {}
@@ -23,7 +23,7 @@ pub async fn force_register(
     genesis_head: String,
     validation_code: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let alice = PairSigner::new(AccountKeyring::Alice.pair());
+    let alice = get_signer();
 
     let call = Call::Registrar(RegistrarCall::force_register {
         who: account_manager,
@@ -42,4 +42,10 @@ pub async fn force_register(
         .await?
         .has::<rococo::sudo::events::Sudid>()?;
     Ok(())
+}
+
+fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
+    let mnemonic_phrase = std::env::var("SEED").expect("Error: No SEED provided");
+    let pair = sp_core::sr25519::Pair::from_string(&mnemonic_phrase, None).unwrap();
+    PairSigner::new(pair)
 }

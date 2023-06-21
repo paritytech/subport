@@ -9,6 +9,6 @@ edition = "2021"
 clap = { version = "4.0", features = ["derive"] } # cli
 tokio = { version = "1.12.0", features = ["full"] } # for our async runtime
 scale = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"] }
-subxt = "0.28.0" 
+subxt = "0.29.0" 
 dotenv = "0.15.0" # for secret variables
-sp-keyring = "23.0.0"
+sp-keyring = "24.0.0"

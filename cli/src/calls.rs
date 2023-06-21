@@ -2,13 +2,15 @@ use crate::helper::Api;
 use sp_keyring::AccountKeyring;
 use subxt::{tx::PairSigner, utils::AccountId32};
 
-#[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
+// #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
+// pub mod rococo {}
+#[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
 pub mod rococo {}
 
 use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 use rococo::runtime_types::polkadot_parachain::primitives::{HeadData, ValidationCode};
 
-type Call = rococo::runtime_types::rococo_runtime::RuntimeCall;
+type Call = rococo::runtime_types::rococo_runtime::Call;
 type RegistrarCall = rococo::runtime_types::polkadot_runtime_common::paras_registrar::pallet::Call;
 
 //
@@ -39,6 +41,5 @@ pub async fn force_register(
         .wait_for_finalized_success()
         .await?
         .has::<rococo::sudo::events::Sudid>()?;
-
     Ok(())
 }

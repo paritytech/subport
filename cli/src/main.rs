@@ -35,18 +35,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // If the ParaID is not registered (Parachain or Parathread), register it with sudo
     let is_registered = is_registered(args.para_id).await;
     if !is_registered.unwrap() {
-        register(
+        println!("Registering para_id {:?}", args.para_id);
+        let registration_result = register(
             args.para_id,
             args.account_address,
-            args.path_validation_code,
             args.path_genesis_head,
+            args.path_validation_code,
         )
-        .await?;
+        .await;
+        match registration_result {
+            Ok(_) => println!("Registration succesful"),
+            Err(_error) => panic!("Error registrating the parachain"),
+        };
     }
 
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);
-
+    println!("perm_slot: {:?}", perm_slot);
     if perm_slot {
         println!("ParaId: {} needs a permanent slot", args.para_id);
     } else {

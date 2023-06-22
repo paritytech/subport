@@ -2,7 +2,7 @@ use clap::Parser;
 use std::{path::PathBuf};
 use subxt::{utils::AccountId32};
 use dotenv::dotenv;
-use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_registered};
+use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_registered, assign_slots};
 
 #[derive(Parser, Debug)]
 #[command(about = "CLI tool to onboard parachains.")]
@@ -54,11 +54,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);
     println!("perm_slot: {:?}", perm_slot);
-    if perm_slot {
-        println!("ParaId: {} needs a permanent slot", args.para_id);
-    } else {
-        println!("ParaId: {} needs a temporary slot", args.para_id);
-    }
+
+    let assign_slots_result = assign_slots(args.para_id, perm_slot).await;
+    
+    match assign_slots_result {
+        Ok(_) => println!("Slots scheduled to be assigned"),
+        Err(_error) => panic!("Error assigning the slots"),
+    };
 
     Ok(())
 }

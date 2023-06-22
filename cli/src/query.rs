@@ -13,6 +13,7 @@ use kusama::runtime_types::polkadot_parachain::primitives::Id as KusamaId;
 use polkadot::runtime_types::polkadot_parachain::primitives::Id;
 use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 
+//
 // Checks if paraId holds any leases on the specified chain
 //
 pub async fn maybe_leases(
@@ -29,5 +30,19 @@ pub async fn maybe_leases(
     match api.storage().at_latest().await?.fetch(&query).await? {
         Some(_) => Ok(true),
         _ => Ok(false),
+    }
+}
+
+//
+// Checks if paraId is already registered
+//
+pub async fn paras_registered(
+    api: Api,
+    para_id: u32,
+) -> Result<bool, Box<dyn std::error::Error>> {
+    let query = rococo::storage().paras().para_lifecycles(RococoId(para_id));
+    match api.storage().at_latest().await?.fetch(&query).await? {
+        Some(_) => Ok(true),
+        _ => Ok(false), 
     }
 }

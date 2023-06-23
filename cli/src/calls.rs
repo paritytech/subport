@@ -7,8 +7,8 @@ use sp_core::Pair;
 #[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
 pub mod rococo {}
 
-const BLOCKS_SCHEDULED = 20;
-const DEPOSIT_REGISTER = 10_000;
+const BLOCKS_SCHEDULED: u32 = 20;
+const DEPOSIT_REGISTER: u128 = 10_000;
 
 use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 use rococo::runtime_types::polkadot_parachain::primitives::{HeadData, ValidationCode};

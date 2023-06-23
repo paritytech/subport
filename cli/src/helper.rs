@@ -64,19 +64,18 @@ pub async fn register(
     path_genesis_head: PathBuf,
     path_validation_code: PathBuf,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let validation_code = fs::read(path_validation_code)
+    let validation_code = fs::read_to_string(path_validation_code)
         .expect("Should have been able to read the validation code file");
-    let genesis_head = fs::read(path_genesis_head)
+    let genesis_head = fs::read_to_string(path_genesis_head)
         .expect("Should have been able to read the genesis file");
-
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
     force_register(
         rococo_api,
         para_id,
         account_manager,
-        genesis_head,
-        validation_code,
+        genesis_head.into_bytes(),
+        validation_code.into_bytes()
     )
     .await
 }

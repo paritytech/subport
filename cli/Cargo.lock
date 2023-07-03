@@ -1656,6 +1656,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "dotenv",
+ "hex",
  "parity-scale-codec",
  "sp-core",
  "sp-keyring",

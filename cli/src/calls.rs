@@ -31,7 +31,6 @@ pub async fn force_register(
     validation_code: Vec<u8>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let alice = get_signer();
-
     let call = Call::Registrar(RegistrarCall::force_register {
         who: account_manager,
         deposit: DEPOSIT_REGISTER,

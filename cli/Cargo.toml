@@ -13,3 +13,4 @@ subxt = "0.29.0"
 dotenv = "0.15.0" # for secret variables
 sp-keyring = "24.0.0"
 sp-core = "21.0.0"
+hex = "0.4"

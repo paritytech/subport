@@ -66,7 +66,7 @@ pub async fn register(
 ) -> Result<(), Box<dyn std::error::Error>> {
     let validation_code = fs::read_to_string(path_validation_code)
         .expect("Should have been able to read the validation code file");
-    let genesis_head = fs::read_to_string(path_genesis_head)
+    let genesis_head = fs::read(path_genesis_head)
         .expect("Should have been able to read the genesis file");
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
@@ -74,8 +74,8 @@ pub async fn register(
         rococo_api,
         para_id,
         account_manager,
-        genesis_head.into_bytes(),
-        validation_code.into_bytes()
+        genesis_head,
+        parse_validation_code(validation_code),
     )
     .await
 }
@@ -94,4 +94,13 @@ pub async fn assign_slots(
         is_permanent_slot,
     )
     .await
+}
+
+fn parse_validation_code(validation_code: String) -> Vec<u8>{
+    let mut parsed_validation_code = validation_code;
+    // Remove the 0x
+    parsed_validation_code.remove(0);
+    parsed_validation_code.remove(0);  
+    // Decode the hex to bytes  
+    hex::decode(parsed_validation_code).unwrap()
 }

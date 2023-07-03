@@ -53,7 +53,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);
-    println!("perm_slot: {:?}", perm_slot);
+    if perm_slot {
+        println!("ParaId: {} needs a permanent slot", args.para_id);
+    }
+    else {
+        println!("ParaId: {} needs a temporary slot", args.para_id);
+    }
 
     let assign_slots_result = assign_slots(args.para_id, perm_slot).await;
     

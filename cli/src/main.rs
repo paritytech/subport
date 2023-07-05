@@ -24,9 +24,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
     let args = Cli::parse();
 
-    // Don't the anything if the ParaID already has an slot in Rococo
-    let has_already_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
-    if has_already_slot {
+    // Don't do anything if the ParaID already has an slot in Rococo
+    let has_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
+    if has_slot {
         println!(
             "Error: ParaId: {} already has a slot in Rococo",
             args.para_id

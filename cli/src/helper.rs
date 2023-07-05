@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
-use crate::calls::{force_register, schedule_assign_slots, force_transfer};
+use crate::calls::{force_register, force_transfer, schedule_assign_slots};
 use crate::query::{maybe_leases, paras_registered};
 
 pub enum Chain {
@@ -66,8 +66,8 @@ pub async fn register(
 ) -> Result<(), Box<dyn std::error::Error>> {
     let validation_code = fs::read_to_string(path_validation_code)
         .expect("Should have been able to read the validation code file");
-    let genesis_head = fs::read(path_genesis_head)
-        .expect("Should have been able to read the genesis file");
+    let genesis_head =
+        fs::read(path_genesis_head).expect("Should have been able to read the genesis file");
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
     force_register(
@@ -85,37 +85,25 @@ pub async fn assign_slots(
     para_id: u32,
     is_permanent_slot: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
-    schedule_assign_slots(
-        rococo_api,
-        para_id,
-        is_permanent_slot,
-    )
-    .await
+    schedule_assign_slots(rococo_api, para_id, is_permanent_slot).await
 }
 
 // Fund the parachain manager account
 pub async fn fund_parachain_manager(
     account_manager: AccountId32,
 ) -> Result<(), Box<dyn std::error::Error>> {
-
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
-    force_transfer(
-        rococo_api,
-        account_manager,
-    )
-    .await
+    force_transfer(rococo_api, account_manager).await
 }
 
-
-fn parse_validation_code(validation_code: String) -> Vec<u8>{
+fn parse_validation_code(validation_code: String) -> Vec<u8> {
     let mut parsed_validation_code = validation_code;
     // Remove the 0x
     parsed_validation_code.remove(0);
-    parsed_validation_code.remove(0);  
-    // Decode the hex to bytes  
+    parsed_validation_code.remove(0);
+    // Decode the hex to bytes
     hex::decode(parsed_validation_code).expect("Decoding failed")
 }

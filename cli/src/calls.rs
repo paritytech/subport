@@ -1,6 +1,6 @@
 use crate::helper::Api;
-use subxt::{tx::PairSigner, utils::AccountId32, PolkadotConfig};
 use sp_core::Pair;
+use subxt::{tx::PairSigner, utils::AccountId32, PolkadotConfig};
 
 // #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 // pub mod rococo {}
@@ -18,7 +18,6 @@ type Call = rococo::runtime_types::rococo_runtime::RuntimeCall;
 type RegistrarCall = rococo::runtime_types::polkadot_runtime_common::paras_registrar::pallet::Call;
 type AssignSlotsCall = rococo::runtime_types::polkadot_runtime_common::assigned_slots::pallet::Call;
 type SchedulerCall = rococo::runtime_types::pallet_scheduler::pallet::Call;
-
 
 //
 // Register the parachain with sudo
@@ -63,7 +62,7 @@ pub async fn schedule_assign_slots(
     // Temporary slots by default, and if is_permanent_slot is true, then permanent slots
     let mut call = Call::AssignedSlots(AssignSlotsCall::assign_temp_parachain_slot {
         id: RococoId(para_id),
-        lease_period_start: Current
+        lease_period_start: Current,
     });
     if is_permanent_slot {
         call = Call::AssignedSlots(AssignSlotsCall::assign_perm_parachain_slot {
@@ -76,7 +75,6 @@ pub async fn schedule_assign_slots(
         maybe_periodic: None,
         priority: 0,
         call: Box::new(call),
-
     });
 
     let tx = rococo::tx().sudo().sudo(scheduled_call);

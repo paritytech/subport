@@ -2,7 +2,7 @@ use clap::Parser;
 use std::{path::PathBuf};
 use subxt::{utils::AccountId32};
 use dotenv::dotenv;
-use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_registered, assign_slots};
+use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_registered, assign_slots, fund_parachain_manager};
 
 #[derive(Parser, Debug)]
 #[command(about = "CLI tool to onboard parachains.")]
@@ -40,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Registering para_id {:?}", args.para_id);
         let registration_result = register(
             args.para_id,
-            args.account_address,
+            args.account_address.clone(),
             args.path_genesis_head,
             args.path_validation_code,
         )
@@ -50,6 +50,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Err(_error) => panic!("Error registrating the parachain"),
         };
     }
+    fund_parachain_manager(args.account_address).await;
 
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);

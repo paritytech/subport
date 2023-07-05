@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
-use crate::calls::{force_register, schedule_assign_slots};
+use crate::calls::{force_register, schedule_assign_slots, force_transfer};
 use crate::query::{maybe_leases, paras_registered};
 
 pub enum Chain {
@@ -95,6 +95,21 @@ pub async fn assign_slots(
     )
     .await
 }
+
+// Fund the parachain manager account
+pub async fn fund_parachain_manager(
+    account_manager: AccountId32,
+) -> Result<(), Box<dyn std::error::Error>> {
+
+    //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    force_transfer(
+        rococo_api,
+        account_manager,
+    )
+    .await
+}
+
 
 fn parse_validation_code(validation_code: String) -> Vec<u8>{
     let mut parsed_validation_code = validation_code;

@@ -102,5 +102,5 @@ fn parse_validation_code(validation_code: String) -> Vec<u8>{
     parsed_validation_code.remove(0);
     parsed_validation_code.remove(0);  
     // Decode the hex to bytes  
-    hex::decode(parsed_validation_code).unwrap()
+    hex::decode(parsed_validation_code).expect("Decoding failed")
 }

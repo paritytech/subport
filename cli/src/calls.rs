@@ -8,7 +8,7 @@ use sp_core::Pair;
 pub mod rococo {}
 
 const BLOCKS_SCHEDULED: u32 = 20;
-const DEPOSIT_REGISTER: u128 = 10_000;
+const REGISTER_DEPOSIT: u128 = 10;
 
 use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 use rococo::runtime_types::polkadot_parachain::primitives::{HeadData, ValidationCode};
@@ -33,7 +33,7 @@ pub async fn force_register(
     let alice = get_signer();
     let call = Call::Registrar(RegistrarCall::force_register {
         who: account_manager,
-        deposit: DEPOSIT_REGISTER,
+        deposit: REGISTER_DEPOSIT,
         id: RococoId(para_id),
         genesis_head: HeadData(genesis_head),
         validation_code: ValidationCode(validation_code),

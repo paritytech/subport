@@ -119,6 +119,31 @@ pub async fn force_transfer(
     Ok(())
 }
 
+//
+// Remove a manager lock from a para. This will allow the manager of a
+// previously locked para to deregister or swap a para without using governance.
+//
+pub async fn remove_lock(
+    api: Api,
+    para_id: u32,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let root = get_signer();
+
+    let call = Call::Registrar(RegistrarCall::remove_lock {
+        para: RococoId(para_id),
+    });
+
+    let tx = rococo::tx().sudo().sudo(call);
+
+    api.tx()
+        .sign_and_submit_then_watch_default(&tx, &root)
+        .await?
+        .wait_for_finalized_success()
+        .await?
+        .has::<rococo::sudo::events::Sudid>()?;
+    Ok(())
+}
+
 fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
     let mnemonic_phrase = std::env::var("SEED").expect("Error: No SEED provided");
     let pair = sp_core::sr25519::Pair::from_string(&mnemonic_phrase, None).unwrap();

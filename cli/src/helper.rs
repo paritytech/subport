@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
-use crate::calls::{force_register, force_transfer, schedule_assign_slots};
+use crate::calls::{force_register, force_transfer, schedule_assign_slots, remove_lock};
 use crate::query::{maybe_leases, paras_registered};
 
 pub enum Chain {
@@ -97,6 +97,15 @@ pub async fn fund_parachain_manager(
     //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
     let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
     force_transfer(rococo_api, account_manager).await
+}
+
+// Remove a manager lock for para_id.
+pub async fn remove_parachain_lock(
+    para_id: u32,
+) -> Result<(), Box<dyn std::error::Error>> {
+    //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    remove_lock(rococo_api, para_id).await
 }
 
 fn parse_validation_code(validation_code: String) -> Vec<u8> {

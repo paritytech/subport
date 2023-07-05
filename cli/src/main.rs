@@ -2,7 +2,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::helper::{
     assign_slots, fund_parachain_manager, has_slot_in_rococo, is_registered, needs_perm_slot,
-    register,
+    register, remove_parachain_lock
 };
 use std::path::PathBuf;
 use subxt::utils::AccountId32;
@@ -53,7 +53,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Err(_error) => panic!("Error registrating the parachain"),
         };
     }
-    fund_parachain_manager(args.account_address).await;
+    let lock_removed  = remove_parachain_lock(args.para_id).await;
+    match lock_removed {
+        Ok(_) => println!("Lock removed for the parachain"),
+        Err(_error) => panic!("Error removing the lock for the parachain"),
+    };
+    let parachain_funded = fund_parachain_manager(args.account_address).await;
+    match parachain_funded {
+        Ok(_) => println!("Funds sent to the manager account"),
+        Err(_error) => panic!("Error sending funds the manager account"),
+    };
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);
     if perm_slot {

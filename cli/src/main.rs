@@ -9,8 +9,8 @@ use para_onboarding::helper::{has_slot_in_rococo, needs_perm_slot, register, is_
 struct Cli {
     /// Parachain ID
     para_id: u32,
-    /// Manager Address
-    account_address: AccountId32,
+    /// Parachain manager account
+    manager_account: AccountId32,
     /// Path to a file with a genesis head.
     #[clap(long, short('g'), value_parser)]
     path_genesis_head: PathBuf,
@@ -40,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Registering para_id {:?}", args.para_id);
         let registration_result = register(
             args.para_id,
-            args.account_address,
+            args.manager_account,
             args.path_genesis_head,
             args.path_validation_code,
         )

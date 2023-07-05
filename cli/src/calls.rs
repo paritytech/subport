@@ -18,6 +18,37 @@ type Call = rococo::runtime_types::rococo_runtime::RuntimeCall;
 type RegistrarCall = rococo::runtime_types::polkadot_runtime_common::paras_registrar::pallet::Call;
 type AssignSlotsCall = rococo::runtime_types::polkadot_runtime_common::assigned_slots::pallet::Call;
 type SchedulerCall = rococo::runtime_types::pallet_scheduler::pallet::Call;
+type BalancesCall = rococo::runtime_types::pallet_balances::pallet::Call;
+
+
+//
+// Transfer amount of tokens between two accounts
+//
+pub async fn force_transfer(
+    api: Api,
+    from: AccountId32,
+    to: AccountId32,
+    amount: u128,
+) -> Result<(), Box<dyn std::error::Error>> {
+
+    let call = Call::Balances(BalancesCall::force_transfer {
+        source: from,
+        dest: to,
+        value: amount,
+    });
+
+    let alice = get_signer();
+
+    let tx = rococo::tx().sudo().sudo(call);
+    api.tx()
+        .sign_and_submit_then_watch_default(&tx, &alice)
+        .await?
+        .wait_for_finalized_success()
+        .await?
+        .has::<rococo::sudo::events::Sudid>()?;
+    Ok(())
+}
+
 
 //
 // Register the parachain with sudo

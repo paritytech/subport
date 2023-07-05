@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
-use crate::calls::{force_register, schedule_assign_slots};
+use crate::calls::{force_register, schedule_assign_slots, force_transfer};
 use crate::query::{maybe_leases, paras_registered};
 
 pub enum Chain {
@@ -9,6 +9,8 @@ pub enum Chain {
     KSM,
     ROC,
 }
+
+const FUND_AMMOUNT = 50;
 
 pub type Api = OnlineClient<PolkadotConfig>;
 
@@ -55,6 +57,17 @@ pub async fn is_registered(para_id: u32) -> Result<bool, Box<dyn std::error::Err
     } else {
         Ok(false)
     }
+}
+
+// Send funds to the given account
+pub async fn fund_account(account: AccountId32) -> Result<(), Box<dyn std::error::Error>> {
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    force_transfer(
+        rococo_api,
+        AcountId32::from("5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"),
+        account,
+        FUND_AMMOUNT,
+    ).await
 }
 
 // Force the Register parachain

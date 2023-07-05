@@ -1,7 +1,7 @@
 use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::helper::{
-    assign_slots, has_slot_in_rococo, is_registered, needs_perm_slot, register,
+    assign_slots, has_slot_in_rococo, is_registered, needs_perm_slot, register, fund_account,
 };
 use std::path::PathBuf;
 use subxt::utils::AccountId32;
@@ -39,6 +39,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // If the ParaID is not registered (Parachain or Parathread), register it with sudo
     let is_registered = is_registered(args.para_id).await;
     if !is_registered.unwrap() {
+        
+        // Send some funds to `manager_account`
+        fund_account(args.manager_account);
+
         println!("Registering para_id {:?}", args.para_id);
         let registration_result = register(
             args.para_id,

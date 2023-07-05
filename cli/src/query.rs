@@ -6,7 +6,9 @@ pub mod polkadot {}
 #[subxt::subxt(runtime_metadata_path = "metadata/kusama_metadata.scale")]
 pub mod kusama {}
 
-#[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
+// #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
+// pub mod rococo {}
+#[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
 pub mod rococo {}
 
 use kusama::runtime_types::polkadot_parachain::primitives::Id as KusamaId;
@@ -36,13 +38,10 @@ pub async fn maybe_leases(
 //
 // Checks if paraId is already registered
 //
-pub async fn paras_registered(
-    api: Api,
-    para_id: u32,
-) -> Result<bool, Box<dyn std::error::Error>> {
+pub async fn paras_registered(api: Api, para_id: u32) -> Result<bool, Box<dyn std::error::Error>> {
     let query = rococo::storage().paras().para_lifecycles(RococoId(para_id));
     match api.storage().at_latest().await?.fetch(&query).await? {
         Some(_) => Ok(true),
-        _ => Ok(false), 
+        _ => Ok(false),
     }
 }

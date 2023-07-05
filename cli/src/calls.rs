@@ -123,10 +123,7 @@ pub async fn force_transfer(
 // Remove a manager lock from a para. This will allow the manager of a
 // previously locked para to deregister or swap a para without using governance.
 //
-pub async fn remove_lock(
-    api: Api,
-    para_id: u32,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn remove_lock(api: Api, para_id: u32) -> Result<(), Box<dyn std::error::Error>> {
     let root = get_signer();
 
     let call = Call::Registrar(RegistrarCall::remove_lock {

@@ -2,7 +2,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::helper::{
     assign_slots, fund_parachain_manager, has_slot_in_rococo, is_registered, needs_perm_slot,
-    register, remove_parachain_lock
+    register, remove_parachain_lock,
 };
 use std::path::PathBuf;
 use subxt::utils::AccountId32;
@@ -53,7 +53,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Err(_error) => panic!("Error registrating the parachain"),
         };
     }
-    let lock_removed  = remove_parachain_lock(args.para_id).await;
+    let lock_removed = remove_parachain_lock(args.para_id).await;
     match lock_removed {
         Ok(_) => println!("Lock removed for the parachain"),
         Err(_error) => panic!("Error removing the lock for the parachain"),

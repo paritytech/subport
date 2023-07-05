@@ -38,5 +38,5 @@ subxt metadata -f bytes >  metadata/local_metadata.scale
 ```
 
 ### Secret Keys
-Create a `.env` file and add the variable `SEED` with your seed key like in the `.env.example` file
-This allows you to do queries into Rococo (as a sudo)
+Create a `.env` file and add the variable `SEED` with the sudo seed key, this allows you to do queries into Rococo (as a sudo).
+The `FAUCET_ADDRESS` from which the app will fund accounts and the `ROCOCO_URI` to point which URI you want to use to connect with the Rococo chain, like in the `.env.example` file

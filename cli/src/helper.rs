@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
-use crate::calls::{force_register, force_transfer, schedule_assign_slots, remove_lock};
+use crate::calls::{force_register, force_transfer, remove_lock, schedule_assign_slots};
 use crate::query::{maybe_leases, paras_registered};
 
 pub enum Chain {
@@ -32,9 +32,7 @@ pub async fn needs_perm_slot(para_id: u32) -> Result<bool, Box<dyn std::error::E
 
 // Returns if the passed para_id already has a slot in Rococo
 pub async fn has_slot_in_rococo(para_id: u32) -> Result<bool, Box<dyn std::error::Error>> {
-    // let rococo_api =
-    //     OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    let rococo_api = get_rococo_uri().await;
     let lease_rococo = maybe_leases(rococo_api, Chain::ROC, para_id).await;
 
     if lease_rococo.unwrap() {
@@ -46,9 +44,7 @@ pub async fn has_slot_in_rococo(para_id: u32) -> Result<bool, Box<dyn std::error
 
 // Check if the parachain is registerd  in Rococo
 pub async fn is_registered(para_id: u32) -> Result<bool, Box<dyn std::error::Error>> {
-    // let rococo_api =
-    //     OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    let rococo_api = get_rococo_uri().await;
     let is_registered_in_rococo = paras_registered(rococo_api, para_id).await;
     if is_registered_in_rococo.unwrap() {
         Ok(true)
@@ -68,8 +64,9 @@ pub async fn register(
         .expect("Should have been able to read the validation code file");
     let genesis_head =
         fs::read(path_genesis_head).expect("Should have been able to read the genesis file");
-    //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+
+    let rococo_api = get_rococo_uri().await;
+
     force_register(
         rococo_api,
         para_id,
@@ -85,8 +82,7 @@ pub async fn assign_slots(
     para_id: u32,
     is_permanent_slot: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    let rococo_api = get_rococo_uri().await;
     schedule_assign_slots(rococo_api, para_id, is_permanent_slot).await
 }
 
@@ -94,17 +90,13 @@ pub async fn assign_slots(
 pub async fn fund_parachain_manager(
     account_manager: AccountId32,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+    let rococo_api = get_rococo_uri().await;
     force_transfer(rococo_api, account_manager).await
 }
 
 // Remove a manager lock for para_id.
-pub async fn remove_parachain_lock(
-    para_id: u32,
-) -> Result<(), Box<dyn std::error::Error>> {
-    //let rococo_api = OnlineClient::<PolkadotConfig>::from_url("wss://rococo-rpc.polkadot.io:443").await?;
-    let rococo_api = OnlineClient::<PolkadotConfig>::from_url("ws://127.0.0.1:9944").await?;
+pub async fn remove_parachain_lock(para_id: u32) -> Result<(), Box<dyn std::error::Error>> {
+    let rococo_api = get_rococo_uri().await;
     remove_lock(rococo_api, para_id).await
 }
 
@@ -115,4 +107,12 @@ fn parse_validation_code(validation_code: String) -> Vec<u8> {
     parsed_validation_code.remove(0);
     // Decode the hex to bytes
     hex::decode(parsed_validation_code).expect("Decoding failed")
+}
+
+async fn get_rococo_uri() -> OnlineClient<PolkadotConfig> {
+    let uri = std::env::var("ROCOCO_URI").unwrap_or("ws://127.0.0.1:9944".to_string());
+    let rococo_api = OnlineClient::<PolkadotConfig>::from_url(uri)
+        .await
+        .expect("Connection to Rococo failed");
+    rococo_api
 }

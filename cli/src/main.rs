@@ -12,8 +12,8 @@ use subxt::utils::AccountId32;
 struct Cli {
     /// Parachain ID
     para_id: u32,
-    /// Manager Address
-    account_address: AccountId32,
+    /// Parachain manager account
+    manager_account: AccountId32,
     /// Path to a file with a genesis head.
     #[clap(long, short('g'), value_parser)]
     path_genesis_head: PathBuf,
@@ -28,9 +28,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::parse();
     //let _ = calculate_sovereign_account(args.para_id);
 
-    // Don't the anything if the ParaID already has an slot in Rococo
-    let has_already_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
-    if has_already_slot {
+    // Don't do anything if the ParaID already has an slot in Rococo
+    let has_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
+    if has_slot {
         println!(
             "Error: ParaId: {} already has a slot in Rococo",
             args.para_id
@@ -44,7 +44,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("Registering para_id {:?}", args.para_id);
         let registration_result = register(
             args.para_id,
-            args.account_address.clone(),
+            args.manager_account.clone(),
             args.path_genesis_head,
             args.path_validation_code,
         )
@@ -59,7 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Ok(_) => println!("Lock removed for the parachain"),
         Err(_error) => panic!("Error removing the lock for the parachain"),
     };
-    let parachain_funded = fund_parachain_manager(args.account_address).await;
+    let parachain_funded = fund_parachain_manager(args.manager_account).await;
     match parachain_funded {
         Ok(_) => println!("Funds sent to the manager account"),
         Err(_error) => panic!("Error sending funds the manager account"),

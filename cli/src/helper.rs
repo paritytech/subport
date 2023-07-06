@@ -63,7 +63,7 @@ pub async fn is_registered(para_id: u32) -> Result<bool, Box<dyn std::error::Err
 // Force the Register parachain
 pub async fn register(
     para_id: u32,
-    account_manager: AccountId32,
+    manager_account: AccountId32,
     path_genesis_head: PathBuf,
     path_validation_code: PathBuf,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -77,7 +77,7 @@ pub async fn register(
     force_register(
         rococo_api,
         para_id,
-        account_manager,
+        manager_account,
         genesis_head,
         parse_validation_code(validation_code),
     )

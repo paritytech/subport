@@ -2,7 +2,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::helper::{
     assign_slots, fund_parachain_manager, has_slot_in_rococo, is_registered, needs_perm_slot,
-    register, remove_parachain_lock,
+    register, remove_parachain_lock, fund_sovereign_account
 };
 use std::path::PathBuf;
 use subxt::utils::AccountId32;
@@ -26,6 +26,7 @@ struct Cli {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
     let args = Cli::parse();
+    //let _ = calculate_sovereign_account(args.para_id);
 
     // Don't the anything if the ParaID already has an slot in Rococo
     let has_already_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
@@ -62,6 +63,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     match parachain_funded {
         Ok(_) => println!("Funds sent to the manager account"),
         Err(_error) => panic!("Error sending funds the manager account"),
+    };
+
+    let sovereign_account_funded = fund_sovereign_account(args.para_id).await;
+    match sovereign_account_funded {
+        Ok(_) => println!("Funds sent to the sovereign account account"),
+        Err(_error) => panic!("Error sending funds the sovereign account"),
     };
 
     let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);

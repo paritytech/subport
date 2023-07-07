@@ -2,7 +2,7 @@ use sp_core::sr25519::Pair;
 use std::{fs, path::PathBuf};
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 
-use crate::calls::{force_register, force_transfer, remove_lock, schedule_assign_slots};
+use crate::calls::{batch, force_register};
 use crate::query::{maybe_leases, paras_registered};
 use crate::utils::{calculate_sovereign_account, parse_validation_code};
 
@@ -41,6 +41,25 @@ pub async fn is_registered(
     }
 }
 
+// Batch for various calls: remove parachain lock, fund parachain manager and sovereign account and schedule assign slots
+pub async fn batch_calls(
+    rococo_api: OnlineClient<PolkadotConfig>,
+    para_id: u32,
+    manager_account: AccountId32,
+    is_permanent_slot: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let sovereign_account_str = calculate_sovereign_account::<Pair>(para_id)?;
+    let sovereign_account: AccountId32 = sovereign_account_str.parse().unwrap();
+    batch(
+        rococo_api,
+        para_id,
+        manager_account,
+        sovereign_account,
+        is_permanent_slot,
+    )
+    .await
+}
+
 // Force the Register parachain
 pub async fn register(
     rococo_api: OnlineClient<PolkadotConfig>,
@@ -62,41 +81,6 @@ pub async fn register(
         parse_validation_code(validation_code),
     )
     .await
-}
-
-// Force the Register parachain
-pub async fn assign_slots(
-    rococo_api: OnlineClient<PolkadotConfig>,
-    para_id: u32,
-    is_permanent_slot: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
-    schedule_assign_slots(rococo_api, para_id, is_permanent_slot).await
-}
-
-// Fund the parachain manager account
-pub async fn fund_parachain_manager(
-    rococo_api: OnlineClient<PolkadotConfig>,
-    account_manager: AccountId32,
-) -> Result<(), Box<dyn std::error::Error>> {
-    force_transfer(rococo_api, account_manager).await
-}
-
-// Fund the parachain manager account
-pub async fn fund_sovereign_account(
-    rococo_api: OnlineClient<PolkadotConfig>,
-    para_id: u32,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let sovereign_account_str = calculate_sovereign_account::<Pair>(para_id)?;
-    let sovereign_account: AccountId32 = sovereign_account_str.parse().unwrap();
-    force_transfer(rococo_api, sovereign_account).await
-}
-
-// Remove a manager lock for para_id.
-pub async fn remove_parachain_lock(
-    rococo_api: OnlineClient<PolkadotConfig>,
-    para_id: u32,
-) -> Result<(), Box<dyn std::error::Error>> {
-    remove_lock(rococo_api, para_id).await
 }
 
 // Returns if the passed para_id is applicable for a permanent slot in Rococo

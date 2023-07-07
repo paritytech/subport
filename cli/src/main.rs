@@ -2,10 +2,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::{
     chain_connector::{kusama_connection, polkadot_connection, rococo_connection},
-    helper::{
-        assign_slots, fund_parachain_manager, fund_sovereign_account, has_slot_in_rococo,
-        is_registered, needs_perm_slot, register, remove_parachain_lock,
-    },
+    helper::{batch_calls, has_slot_in_rococo, is_registered, needs_perm_slot, register},
 };
 use std::path::PathBuf;
 use subxt::utils::AccountId32;
@@ -43,6 +40,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         return Ok(());
     }
+    // Query Polkadot and Kusma to see if the ParaID needs a permanent/tmp slot
+    let polkadot_api = polkadot_connection().await;
+    let kusama_api = kusama_connection().await;
+
+    let perm_slot: bool = needs_perm_slot(polkadot_api, kusama_api, args.para_id)
+        .await
+        .unwrap_or(false);
+    if perm_slot {
+        println!("ParaId: {} needs a permanent slot", args.para_id);
+    } else {
+        println!("ParaId: {} needs a temporary slot", args.para_id);
+    }
 
     // If the ParaID is not registered (Parachain or Parathread), register it with sudo
     let is_registered = is_registered(rococo_api.clone(), args.para_id).await;
@@ -61,40 +70,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             Err(_error) => panic!("Error registrating the parachain"),
         };
     }
-    let lock_removed = remove_parachain_lock(rococo_api.clone(), args.para_id).await;
-    match lock_removed {
-        Ok(_) => println!("Lock removed for the parachain"),
-        Err(_error) => panic!("Error removing the lock for the parachain"),
-    };
-    let parachain_funded = fund_parachain_manager(rococo_api.clone(), args.manager_account).await;
-    match parachain_funded {
-        Ok(_) => println!("Funds sent to the manager account"),
-        Err(_error) => panic!("Error sending funds the manager account"),
-    };
 
-    let sovereign_account_funded = fund_sovereign_account(rococo_api.clone(), args.para_id).await;
-    match sovereign_account_funded {
-        Ok(_) => println!("Funds sent to the sovereign account account"),
-        Err(_error) => panic!("Error sending funds the sovereign account"),
-    };
-
-    let polkadot_api = polkadot_connection().await;
-    let kusama_api = kusama_connection().await;
-
-    let perm_slot: bool = needs_perm_slot(polkadot_api, kusama_api, args.para_id)
-        .await
-        .unwrap_or(false);
-    if perm_slot {
-        println!("ParaId: {} needs a permanent slot", args.para_id);
-    } else {
-        println!("ParaId: {} needs a temporary slot", args.para_id);
-    }
-
-    let assign_slots_result = assign_slots(rococo_api.clone(), args.para_id, perm_slot).await;
-
-    match assign_slots_result {
-        Ok(_) => println!("Slots scheduled to be assigned"),
-        Err(_error) => panic!("Error assigning the slots"),
+    // Rest of the calls bached: remove parachain lock, fund parachain manager and sovereign account and schedule assign slots
+    let calls_batched = batch_calls(
+        rococo_api.clone(),
+        args.para_id,
+        args.manager_account,
+        perm_slot,
+    )
+    .await;
+    match calls_batched {
+        Ok(_) => println!("A batch of calls has been sent succesfully"),
+        Err(_error) => panic!("Error batching the calls"),
     };
 
     Ok(())

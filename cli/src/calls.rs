@@ -20,6 +20,52 @@ type RegistrarCall = rococo::runtime_types::polkadot_runtime_common::paras_regis
 type AssignSlotsCall = rococo::runtime_types::polkadot_runtime_common::assigned_slots::pallet::Call;
 type SchedulerCall = rococo::runtime_types::pallet_scheduler::pallet::Call;
 type BalancesCall = rococo::runtime_types::pallet_balances::pallet::Call;
+type UtilityCall = rococo::runtime_types::pallet_utility::pallet::Call;
+
+//
+// Batch for different calls
+//
+pub async fn batch(
+    api: Api,
+    para_id: u32,
+    account_manager: AccountId32,
+    sovereign_account: AccountId32,
+    is_permanent_slot: bool,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let root = get_signer();
+
+    let mut calls = Vec::<Call>::new();
+    let remove_lock_call = create_remove_lock_call(para_id)
+        .await
+        .expect("Error preparing the call for remove the lock for the parachain");
+    calls.push(remove_lock_call);
+    let fund_parachain_manager_call = create_force_transfer_call(account_manager)
+        .await
+        .expect("Error preparing the call to fund the parachain manager");
+    calls.push(fund_parachain_manager_call);
+    let fund_sovereign_account_call = create_force_transfer_call(sovereign_account)
+        .await
+        .expect("Error preparing the call to fund the sovereign account");
+    calls.push(fund_sovereign_account_call);
+    let schedule_assign_slot_call = create_schedule_assign_slots_call(para_id, is_permanent_slot)
+        .await
+        .expect("Error preparing the call to assign slots");
+    calls.push(schedule_assign_slot_call);
+    //let calls = [remove_lock_call, fund_parachain_manager_call, fund_sovereign_account_call, schedule_assign_slot_call];
+    //let batch_call = rococo::tx().utility().batch(calls);
+
+    let batch_call = Call::Utility(UtilityCall::batch { calls: calls });
+
+    let tx = rococo::tx().sudo().sudo(batch_call);
+
+    api.tx()
+        .sign_and_submit_then_watch_default(&tx, &root)
+        .await?
+        .wait_for_finalized_success()
+        .await?
+        .has::<rococo::sudo::events::Sudid>()?;
+    Ok(())
+}
 
 //
 // Register the parachain with sudo
@@ -52,15 +98,16 @@ pub async fn force_register(
 }
 
 //
+// Private calls
+//
+
+//
 // Schedule the assign slots into a parachain with sudo
 //
-pub async fn schedule_assign_slots(
-    api: Api,
+async fn create_schedule_assign_slots_call(
     para_id: u32,
     is_permanent_slot: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let root = get_signer();
-
+) -> Result<Call, Box<dyn std::error::Error>> {
     // Temporary slots by default, and if is_permanent_slot is true, then permanent slots
     let mut call = Call::AssignedSlots(AssignSlotsCall::assign_temp_parachain_slot {
         id: RococoId(para_id),
@@ -79,24 +126,15 @@ pub async fn schedule_assign_slots(
         call: Box::new(call),
     });
 
-    let tx = rococo::tx().sudo().sudo(scheduled_call);
-
-    api.tx()
-        .sign_and_submit_then_watch_default(&tx, &root)
-        .await?
-        .wait_for_finalized_success()
-        .await?
-        .has::<rococo::sudo::events::Sudid>()?;
-    Ok(())
+    Ok(scheduled_call)
 }
 
 //
 // Fund the parachain manager from the faucet address using sudo
 //
-pub async fn force_transfer(
-    api: Api,
+async fn create_force_transfer_call(
     account_dest: AccountId32,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<Call, Box<dyn std::error::Error>> {
     let root = get_signer();
     let faucet_address =
         std::env::var("FAUCET_ADDRESS").expect("Error: No Faucer Address provided");
@@ -107,38 +145,18 @@ pub async fn force_transfer(
         dest: account_dest.into(),
         value: FUNDS_MANAGER,
     });
-
-    let tx = rococo::tx().sudo().sudo(call);
-
-    api.tx()
-        .sign_and_submit_then_watch_default(&tx, &root)
-        .await?
-        .wait_for_finalized_success()
-        .await?
-        .has::<rococo::sudo::events::Sudid>()?;
-    Ok(())
+    Ok(call)
 }
 
 //
 // Remove a manager lock from a para. This will allow the manager of a
 // previously locked para to deregister or swap a para without using governance.
 //
-pub async fn remove_lock(api: Api, para_id: u32) -> Result<(), Box<dyn std::error::Error>> {
-    let root = get_signer();
-
+async fn create_remove_lock_call(para_id: u32) -> Result<Call, Box<dyn std::error::Error>> {
     let call = Call::Registrar(RegistrarCall::remove_lock {
         para: RococoId(para_id),
     });
-
-    let tx = rococo::tx().sudo().sudo(call);
-
-    api.tx()
-        .sign_and_submit_then_watch_default(&tx, &root)
-        .await?
-        .wait_for_finalized_success()
-        .await?
-        .has::<rococo::sudo::events::Sudid>()?;
-    Ok(())
+    Ok(call)
 }
 
 fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {

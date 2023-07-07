@@ -1654,12 +1654,14 @@ checksum = "ff011a302c396a5197692431fc1948019154afc178baf7d8e37367442a4601cf"
 name = "para-onboarding"
 version = "0.1.0"
 dependencies = [
+ "array-bytes",
  "clap",
  "dotenv",
  "hex",
  "parity-scale-codec",
  "sp-core",
  "sp-keyring",
+ "sp-runtime",
  "subxt",
  "tokio",
 ]

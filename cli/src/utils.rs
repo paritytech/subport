@@ -8,9 +8,8 @@ use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 
 pub fn parse_validation_code(validation_code: String) -> Vec<u8> {
     let mut parsed_validation_code = validation_code;
-    // Remove the 0x
-    parsed_validation_code.remove(0);
-    parsed_validation_code.remove(0);
+    // Remove "0x" from validation_code
+    let parsed_validation_code = &validation_code[2..];
     // Decode the hex to bytes
     hex::decode(parsed_validation_code).expect("Decoding failed")
 }

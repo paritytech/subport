@@ -1,0 +1,34 @@
+name: GitHub Issue Sync
+
+on:
+  issues:
+    types:
+      - opened
+  workflow_dispatch:
+    inputs:
+      excludeClosed:
+        description: 'Exclude closed issues in the sync.'
+        type: boolean
+        default: true
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout  # Clone git repository
+        uses: actions/checkout@v3
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install CLI App
+        working-directory: cli
+        run: cargo build
+
+      - name: Run CLI App
+        id: expected
+        working-directory: cli
+        run: echo "results=$(cargo run 2000 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw -g './test/para-2000-genesis-state' -v './test/para-2000-wasm')" >> $GITHUB_OUTPUT
+        env:
+          SEED: ${{ secrets.SEED }}
+          FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
+          ROCOCO_URI: ${{ secrets.ROCOCO_URI }}

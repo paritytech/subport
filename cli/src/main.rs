@@ -1,7 +1,8 @@
 use clap::Parser;
 use dotenv::dotenv;
-use para_onboarding::helper::{
-    assign_slots, has_slot_in_rococo, is_registered, needs_perm_slot, register, fund_account,
+use para_onboarding::{
+    chain_connector::{kusama_connection, polkadot_connection, rococo_connection},
+    helper::{batch_calls, has_slot_in_rococo, is_registered, needs_perm_slot, register, fund_account},
 };
 use std::path::PathBuf;
 use subxt::utils::AccountId32;
@@ -26,8 +27,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
     let args = Cli::parse();
 
+    let rococo_api = rococo_connection().await;
+
     // Don't do anything if the ParaID already has an slot in Rococo
-    let has_slot: bool = has_slot_in_rococo(args.para_id).await.unwrap_or(false);
+    let has_slot: bool = has_slot_in_rococo(rococo_api.clone(), args.para_id)
+        .await
+        .unwrap_or(false);
     if has_slot {
         println!(
             "Error: ParaId: {} already has a slot in Rococo",
@@ -35,9 +40,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         );
         return Ok(());
     }
+    // Query Polkadot and Kusma to see if the ParaID needs a permanent/tmp slot
+    let polkadot_api = polkadot_connection().await;
+    let kusama_api = kusama_connection().await;
+
+    let perm_slot: bool = needs_perm_slot(polkadot_api, kusama_api, args.para_id)
+        .await
+        .unwrap_or(false);
+    if perm_slot {
+        println!("ParaId: {} needs a permanent slot", args.para_id);
+    } else {
+        println!("ParaId: {} needs a temporary slot", args.para_id);
+    }
 
     // If the ParaID is not registered (Parachain or Parathread), register it with sudo
-    let is_registered = is_registered(args.para_id).await;
+    let is_registered = is_registered(rococo_api.clone(), args.para_id).await;
     if !is_registered.unwrap() {
         
         // Send some funds to `manager_account`
@@ -45,8 +62,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         println!("Registering para_id {:?}", args.para_id);
         let registration_result = register(
+            rococo_api.clone(),
             args.para_id,
-            args.manager_account,
+            args.manager_account.clone(),
             args.path_genesis_head,
             args.path_validation_code,
         )
@@ -57,18 +75,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         };
     }
 
-    let perm_slot: bool = needs_perm_slot(args.para_id).await.unwrap_or(false);
-    if perm_slot {
-        println!("ParaId: {} needs a permanent slot", args.para_id);
-    } else {
-        println!("ParaId: {} needs a temporary slot", args.para_id);
-    }
-
-    let assign_slots_result = assign_slots(args.para_id, perm_slot).await;
-
-    match assign_slots_result {
-        Ok(_) => println!("Slots scheduled to be assigned"),
-        Err(_error) => panic!("Error assigning the slots"),
+    // Rest of the calls bached: remove parachain lock, fund parachain manager and sovereign account and schedule assign slots
+    let calls_batched = batch_calls(
+        rococo_api.clone(),
+        args.para_id,
+        args.manager_account,
+        perm_slot,
+    )
+    .await;
+    match calls_batched {
+        Ok(_) => println!("A batch of calls has been sent succesfully"),
+        Err(_error) => panic!("Error batching the calls"),
     };
 
     Ok(())

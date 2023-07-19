@@ -1,4 +1,5 @@
-use crate::helper::{Api, Chain};
+use crate::utils::{Chain};
+use subxt::{OnlineClient, PolkadotConfig};
 
 #[subxt::subxt(runtime_metadata_path = "metadata/polkadot_metadata.scale")]
 pub mod polkadot {}
@@ -19,7 +20,7 @@ use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 // Checks if paraId holds any leases on the specified chain
 //
 pub async fn maybe_leases(
-    api: Api,
+    api: OnlineClient<PolkadotConfig>,
     chain: Chain,
     para_id: u32,
 ) -> Result<bool, Box<dyn std::error::Error>> {
@@ -38,7 +39,10 @@ pub async fn maybe_leases(
 //
 // Checks if paraId is already registered
 //
-pub async fn paras_registered(api: Api, para_id: u32) -> Result<bool, Box<dyn std::error::Error>> {
+pub async fn paras_registered(
+    api: OnlineClient<PolkadotConfig>,
+    para_id: u32
+) -> Result<bool, Box<dyn std::error::Error>> {
     let query = rococo::storage().paras().para_lifecycles(RococoId(para_id));
     match api.storage().at_latest().await?.fetch(&query).await? {
         Some(_) => Ok(true),

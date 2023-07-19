@@ -115,7 +115,7 @@ pub fn create_scheduled_remove_lock_call(
     });
 
     let scheduled_call = Call::Scheduler(SchedulerCall::schedule_after {
-        after: BLOCKS_SCHEDULED,
+        after: BLOCKS_SCHEDULED * 2,
         maybe_periodic: None,
         priority: 0,
         call: Box::new(call),

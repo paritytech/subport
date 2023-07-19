@@ -1,4 +1,4 @@
-name: Rococo Slot Request
+name: Test
 
 on:
   issues:
@@ -29,7 +29,8 @@ jobs:
       - name: Run CLI App
         id: expected
         working-directory: cli
-        run: echo "results=$(cargo run 2000 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw -g './test/para-2000-genesis-state' -v './test/para-2000-wasm')" >> $GITHUB_OUTPUT
+        #run: echo "results=$(cargo run 2000 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw -g './test/para-2000-genesis-state' -v './test/para-2000-wasm')" >> $GITHUB_OUTPUT
+        run: echo "Issue body: ${{ github.event.issue.body }}"
         env:
           SEED: ${{ secrets.SEED }}
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}

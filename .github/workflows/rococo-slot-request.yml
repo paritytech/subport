@@ -7,10 +7,9 @@ on:
 
   workflow_dispatch:
     inputs:
-      excludeClosed:
-        description: 'Exclude closed issues in the sync.'
-        type: boolean
-        default: true
+      issue_number:
+        type: string
+        required: true
 jobs:
   rococo-slot-request:
     if: ${{ github.event.label.name == 'Rococo' }}

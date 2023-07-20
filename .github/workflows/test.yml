@@ -22,9 +22,9 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install CLI App
-        working-directory: cli
-        run: cargo build
+      #- name: Install CLI App
+      #  working-directory: cli
+      #  run: cargo build
 
       - name: Run CLI App
         id: expected

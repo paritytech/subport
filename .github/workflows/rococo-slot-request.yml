@@ -12,8 +12,8 @@ on:
         type: boolean
         default: true
 jobs:
-  run:
-    if: ${{ github.event.label.name == 'Rococo' }}
+  rococo-slot-request:
+    if: github.ref == 'refs/heads/al3mart/test-workflow' && ${{ github.event.label.name == 'Rococo' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout  # Clone git repository
@@ -22,14 +22,15 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install CLI App
-        working-directory: cli
-        run: cargo build
+      #- name: Install CLI App
+      #  working-directory: cli
+      #  run: cargo build
 
       - name: Run CLI App
         id: expected
         working-directory: cli
-        run: echo "results=$(cargo run 2000 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw -g './test/para-2000-genesis-state' -v './test/para-2000-wasm')" >> $GITHUB_OUTPUT
+        run: echo "Issue body: ${{ github.event.issue.body }}"
+        #run: echo "results=$(cargo run 2000 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw -g './test/para-2000-genesis-state' -v './test/para-2000-wasm')" >> $GITHUB_OUTPUT
         env:
           SEED: ${{ secrets.SEED }}
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}

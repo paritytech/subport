@@ -43,5 +43,5 @@ jobs:
       - uses: actions/checkout@v3
       - name: Close issue
       run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
-      nev:
+      env:
         GH_TOKEN: ${{ github.token }}

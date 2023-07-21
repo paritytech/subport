@@ -60,7 +60,7 @@ body:
     id: genesis
     attributes:
       label: '>>Upload your Genesis Head (genesis state) - Do not submit a compressed file.<<'
-      placeholder: Drag & drop or upload the genesis file, or provide a link to this file to download
+      placeholder: Drag & drop or upload the genesis file.
     validations:
       required: true
   - type: textarea

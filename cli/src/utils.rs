@@ -5,6 +5,7 @@ use sp_core::{
 };
 use sp_runtime::MultiSigner;
 use subxt::{tx::PairSigner, utils::AccountId32, OnlineClient, PolkadotConfig};
+use std::str::FromStr;
 
 use crate::query::{maybe_leases, paras_registered};
 
@@ -24,6 +25,11 @@ pub fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
     let mnemonic_phrase = std::env::var("SEED").expect("Error: No SEED provided");
     let pair = sp_core::sr25519::Pair::from_string(&mnemonic_phrase, None).unwrap();
     PairSigner::new(pair)
+}
+
+pub fn get_sudo_account() -> AccountId32 {
+    let sudo_account = std::env::var("SUDO_ACCOUNT").expect("Error: No SEED provided");
+    AccountId32::from_str(&sudo_account).unwrap()
 }
 
 pub fn parse_validation_code(validation_code: String) -> Vec<u8> {

@@ -5,7 +5,7 @@ use para_onboarding::{
     utils::{has_slot_in_rococo, is_registered, needs_perm_slot, calculate_sovereign_account, parse_validation_code},
     calls::{Call, create_batch_all_call, create_force_transfer_call,
         create_force_register_call, create_scheduled_assign_slots_call,
-        create_scheduled_remove_lock_call, sign_and_send_call
+        create_scheduled_remove_lock_call, create_sudo_call, sign_and_send_proxy_call
     },
 };
 use std::{fs, path::PathBuf};
@@ -101,7 +101,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Get the batched call based on the calls present in buffer
     let batch_call = create_batch_all_call(call_buffer).unwrap();
 
+    // Create a SUDO call
+    let sudo_call = create_sudo_call(batch_call).unwrap();
+
     // Sign and send batch_call to the network
-    sign_and_send_call(rococo_api, batch_call).await
+    sign_and_send_proxy_call(rococo_api, sudo_call).await
 
 }

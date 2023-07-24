@@ -26,6 +26,25 @@ pub fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
     PairSigner::new(pair)
 }
 
+pub async fn get_file_content(uri_or_content: String) -> String {
+    // If the string contains "https://" and "[", "]" and "(", ")" then it is a URI, download file
+    if uri_or_content.contains("https://") && uri_or_content.contains ("[") && uri_or_content.contains("]") && uri_or_content.contains ("(") && uri_or_content.contains(")") {
+        let parse_uri: Vec<&str> = uri_or_content.split("(").collect();
+        let parsed_uri: Vec<&str> = parse_uri[1].split(")").collect();
+        let content = download_file(parsed_uri[0].to_string()).await;
+        return content;
+    } else {
+        // Otherwise is a raw content
+        return uri_or_content;
+    }
+}
+
+pub async fn download_file(url: String) -> String {
+    let response = reqwest::get(url).await.expect("Error: Failed to download file");
+    let content =  response.text().await.expect("Error: Failed to download file");
+    return content;
+}
+
 pub fn parse_validation_code(validation_code: String) -> Vec<u8> {
     // Remove "0x" from validation_code
     let parsed_validation_code = &validation_code[2..];

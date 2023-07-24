@@ -26,13 +26,8 @@ const FUNDS: u128 = 10_000_000_000_000; // 10 UNITS
 //
 // Create batch call out of the given calls
 //
-pub fn create_batch_all_call(
-    calls: Vec<Call>,
-) -> Result<Call, Box<dyn std::error::Error>> {
-
-    let batch_call = Call::Utility(
-        UtilityCall::batch_all { calls: calls }
-    );
+pub fn create_batch_all_call(calls: Vec<Call>) -> Result<Call, Box<dyn std::error::Error>> {
+    let batch_call = Call::Utility(UtilityCall::batch_all { calls: calls });
 
     Ok(batch_call)
 }
@@ -107,10 +102,7 @@ pub fn create_scheduled_assign_slots_call(
 //
 // Creates a call to remove the manager lock from the given para
 //
-pub fn create_scheduled_remove_lock_call(
-    para_id: u32,
-) -> Result<Call, Box<dyn std::error::Error>> {
-    
+pub fn create_scheduled_remove_lock_call(para_id: u32) -> Result<Call, Box<dyn std::error::Error>> {
     let call = Call::Registrar(RegistrarCall::remove_lock {
         para: RococoId(para_id),
     });

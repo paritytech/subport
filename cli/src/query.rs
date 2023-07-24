@@ -1,4 +1,4 @@
-use crate::utils::{Chain};
+use crate::utils::Chain;
 use subxt::{OnlineClient, PolkadotConfig};
 
 #[subxt::subxt(runtime_metadata_path = "metadata/polkadot_metadata.scale")]
@@ -41,7 +41,7 @@ pub async fn maybe_leases(
 //
 pub async fn paras_registered(
     api: OnlineClient<PolkadotConfig>,
-    para_id: u32
+    para_id: u32,
 ) -> Result<bool, Box<dyn std::error::Error>> {
     let query = rococo::storage().paras().para_lifecycles(RococoId(para_id));
     match api.storage().at_latest().await?.fetch(&query).await? {

@@ -1,6 +1,6 @@
-use subxt::{utils::AccountId32};
-use subxt::{OnlineClient, PolkadotConfig};
 use crate::utils::get_signer;
+use subxt::utils::AccountId32;
+use subxt::{OnlineClient, PolkadotConfig};
 
 // #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 // pub mod rococo {}
@@ -25,13 +25,8 @@ const FUNDS: u128 = 10_000_000_000_000; // 10 UNITS
 //
 // Create batch call out of the given calls
 //
-pub fn create_batch_all_call(
-    calls: Vec<Call>,
-) -> Result<Call, Box<dyn std::error::Error>> {
-
-    let batch_call = Call::Utility(
-        UtilityCall::batch_all { calls: calls }
-    );
+pub fn create_batch_all_call(calls: Vec<Call>) -> Result<Call, Box<dyn std::error::Error>> {
+    let batch_call = Call::Utility(UtilityCall::batch_all { calls: calls });
 
     Ok(batch_call)
 }
@@ -106,10 +101,7 @@ pub fn create_scheduled_assign_slots_call(
 //
 // Creates a call to remove the manager lock from the given para
 //
-pub fn create_scheduled_remove_lock_call(
-    para_id: u32,
-) -> Result<Call, Box<dyn std::error::Error>> {
-    
+pub fn create_scheduled_remove_lock_call(para_id: u32) -> Result<Call, Box<dyn std::error::Error>> {
     let call = Call::Registrar(RegistrarCall::remove_lock {
         para: RococoId(para_id),
     });
@@ -128,8 +120,7 @@ pub fn create_scheduled_remove_lock_call(
 pub async fn sign_and_send_call(
     api: OnlineClient<PolkadotConfig>,
     call: Call,
-) ->  Result<(), Box<dyn std::error::Error>> {
-
+) -> Result<(), Box<dyn std::error::Error>> {
     let utx = rococo::tx().sudo().sudo(call);
 
     api.tx()

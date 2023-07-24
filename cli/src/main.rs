@@ -1,11 +1,15 @@
 use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::{
+    calls::{
+        create_batch_all_call, create_force_register_call, create_force_transfer_call,
+        create_scheduled_assign_slots_call, create_scheduled_remove_lock_call, sign_and_send_call,
+        Call,
+    },
     chain_connector::{kusama_connection, polkadot_connection, rococo_connection},
-    utils::{has_slot_in_rococo, is_registered, needs_perm_slot, calculate_sovereign_account, parse_validation_code, get_file_content},
-    calls::{Call, create_batch_all_call, create_force_transfer_call,
-        create_force_register_call, create_scheduled_assign_slots_call,
-        create_scheduled_remove_lock_call, sign_and_send_call
+    utils::{
+        calculate_sovereign_account, get_file_content, has_slot_in_rococo, is_registered,
+        needs_perm_slot, parse_validation_code,
     },
 };
 use sp_core::sr25519::Pair;
@@ -61,14 +65,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         println!("ParaId: {} needs a temporary slot", para_id.clone());
     }
-    
+
     // Initialise an empty call buffer
     let mut call_buffer: Vec<Call> = Vec::<Call>::new();
 
     // If the ParaID is not registered (Parachain or Parathread) register it with sudo
     let is_registered = is_registered(rococo_api.clone(), para_id.clone()).await;
     if !is_registered.unwrap() {
-
         // Add call to send funds to `manager_account`
         call_buffer.push(create_force_transfer_call(manager_account.clone()).unwrap());
 
@@ -77,19 +80,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         let genesis_bytes = genesis_head.as_bytes().to_vec();
         let validation_code_bytes = parse_validation_code(validation_code);
-        
 
-        call_buffer.push(create_force_register_call(
-            para_id.clone(),
-            manager_account,
-            genesis_bytes,
-            validation_code_bytes,
-        ).unwrap());
+        call_buffer.push(
+            create_force_register_call(
+                para_id.clone(),
+                manager_account,
+                genesis_bytes,
+                validation_code_bytes,
+            )
+            .unwrap(),
+        );
     }
 
     // Add call to send funds to paras sovereign account
     call_buffer.push(
-        create_force_transfer_call(calculate_sovereign_account::<Pair>(para_id.clone()).unwrap()).unwrap()
+        create_force_transfer_call(calculate_sovereign_account::<Pair>(para_id.clone()).unwrap())
+            .unwrap(),
     );
 
     // Add call to schedule assigning a slot to the given para
@@ -103,5 +109,4 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Sign and send batch_call to the network
     sign_and_send_call(rococo_api, batch_call).await
-
 }

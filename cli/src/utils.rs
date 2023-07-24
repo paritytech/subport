@@ -28,7 +28,12 @@ pub fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
 
 pub async fn get_file_content(uri_or_content: String) -> String {
     // If the string contains "https://" and "[", "]" and "(", ")" then it is a URI, download file
-    if uri_or_content.contains("https://") && uri_or_content.contains ("[") && uri_or_content.contains("]") && uri_or_content.contains ("(") && uri_or_content.contains(")") {
+    if uri_or_content.contains("https://")
+        && uri_or_content.contains("[")
+        && uri_or_content.contains("]")
+        && uri_or_content.contains("(")
+        && uri_or_content.contains(")")
+    {
         let parse_uri: Vec<&str> = uri_or_content.split("(").collect();
         let parsed_uri: Vec<&str> = parse_uri[1].split(")").collect();
         let content = download_file(parsed_uri[0].to_string()).await;
@@ -40,8 +45,13 @@ pub async fn get_file_content(uri_or_content: String) -> String {
 }
 
 pub async fn download_file(url: String) -> String {
-    let response = reqwest::get(url).await.expect("Error: Failed to download file");
-    let content =  response.text().await.expect("Error: Failed to download file");
+    let response = reqwest::get(url)
+        .await
+        .expect("Error: Failed to download file");
+    let content = response
+        .text()
+        .await
+        .expect("Error: Failed to download file");
     return content;
 }
 
@@ -52,7 +62,9 @@ pub fn parse_validation_code(validation_code: String) -> Vec<u8> {
     hex::decode(parsed_validation_code).expect("Decoding failed")
 }
 
-pub fn calculate_sovereign_account<Pair>(para_id: u32) -> Result<AccountId32, Box<dyn std::error::Error>>
+pub fn calculate_sovereign_account<Pair>(
+    para_id: u32,
+) -> Result<AccountId32, Box<dyn std::error::Error>>
 where
     Pair: sp_core::Pair,
     Pair::Public: Into<MultiSigner>,
@@ -66,7 +78,8 @@ where
     let public = array_bytes::hex2bytes(&public_str).expect("Failed to convert hex to bytes");
     let public_key = Pair::Public::try_from(&public)
         .map_err(|_| "Failed to construct public key from given hex")?;
-    let to_parse = public_key.to_ss58check_with_version(Ss58AddressFormatRegistry::SubstrateAccount.into());
+    let to_parse =
+        public_key.to_ss58check_with_version(Ss58AddressFormatRegistry::SubstrateAccount.into());
     Ok(to_parse.parse().unwrap())
 }
 

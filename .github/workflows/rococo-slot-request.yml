@@ -1,4 +1,4 @@
-name: "Attend Rococo Slot Request"
+name: "Handle Rococo Slot Request"
 
 on:
   issues:

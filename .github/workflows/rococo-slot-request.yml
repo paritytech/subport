@@ -36,15 +36,15 @@ jobs:
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
   
-  close_issue:
-    runs-on: macos-latest
-    needs: [handle-rococo-slot-request]
-    permissions:
-      issues: write
-    steps:
-      - uses: actions/checkout@v3
-      - name: Close issue
-      #TODO: add call result from previous job to the message
-      run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  # close_issue:
+  #   runs-on: macos-latest
+  #   needs: [handle-rococo-slot-request]
+  #   permissions:
+  #     issues: write
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Close issue
+  #     #TODO: add call result from previous job to the message
+  #     run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
+  #     env:
+  #       GH_TOKEN: ${{ secrets.GH_TOKEN }}

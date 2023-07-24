@@ -12,8 +12,8 @@ on:
         required: true
 
 jobs:
-  handle-rococo-slot-request:
-    runs-on: ubuntu-latest
+  run:
+    runs-on: macos-latest
     if: github.event.label.name == 'Rococo'
     steps:
       - name: Checkout  # Clone git repository
@@ -22,20 +22,22 @@ jobs:
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
 
-      # Maybe cache
+      - uses: stefanbuck/github-issue-parser@v3
+        id: issue-parser
+        with:
+          template-path: .github/ISSUE_TEMPLATE/rococo.yaml # optional but recommended
 
       - name: Run CLI App
-        id: app
+        id: expected
         working-directory: cli
-        run: echo "Issue body: ${{ github.event.issue.body }}"
-        #run: echo "results=$(cargo run 2000 5HGjWAeFDfFCWPsjFQdVV2Msvz2XtMktvgocEZcCj68kUMaw -g './test/para-2000-genesis-state' -v './test/para-2000-wasm')" >> $GITHUB_OUTPUT
+        run: cargo run "${{ steps.issue-parser.outputs.issueparser_para_id }}" "${{ steps.issue-parser.outputs.issueparser_manager_account }}" -g "${{ steps.issue-parser.outputs.issueparser_genesis }}" -v "${{ steps.issue-parser.outputs.issueparser_wasm }}"
         env:
           SEED: ${{ secrets.SEED }}
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
   
   close_issue:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: [handle-rococo-slot-request]
     permissions:
       issues: write

@@ -7,7 +7,7 @@ body:
       value: |
         ## BEFORE you continue complete the [Parachain Tutorials](https://docs.substrate.io/tutorials/build-a-parachain/)!
   - type: checkboxes
-    id: tutorial-complete
+    id: tutorial_complete
     attributes:
       label: You completed the Parachain Tutorials for your parachain and tested locally?
       description: "We _insist_ that you have tested locally with `rococo-local` at the identical version of the presently running Rococo is using _before_ you can apply for a slot!"
@@ -15,7 +15,7 @@ body:
         - label: "Yes, we have successfully tested our chain on `rococo-local`."
           required: true
   - type: input
-    id: team-name
+    id: team_name
     attributes:
       label: Team Name
       description: "The company, group, or individual requesting the slot."
@@ -23,7 +23,7 @@ body:
     validations:
       required: true
   - type: input
-    id: para-name
+    id: para_name
     attributes:
       label: Parachain Name
       description: "The name of your Parachain"
@@ -31,7 +31,7 @@ body:
     validations:
       required: true
   - type: input
-    id: para-id
+    id: para_id
     attributes:
       label: ParaID
       description: "The paraID that you ***compiled in your chainspec***. If **short-term**, this should already be registered on Rococo with the associated with the genesis state and Wasm for the paraID. If a **long-term** slot, this should ***match the chain you have a slot on for Kusama and/or Polkadot***!"
@@ -39,7 +39,7 @@ body:
     validations:
       required: true
   - type: input
-    id: manager-account
+    id: manager_account
     attributes:
       label: Parachain Manager Account
       description: "A Rococo account that would be set as the manager for this parachain. You might have already set one if you have registered the parachain on your own, please use the same account when filling this field."
@@ -47,7 +47,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: para-id-term
+    id: para_id_term
     attributes:
       label: Is this for a short or long term slot?
       description: "If short-term, please **double-check the paraID you registered as a parathread is in place**. If long-term, please ensure your paraID from Kusama/Polkadot is free/unused on Rococo."
@@ -71,7 +71,7 @@ body:
     validations:
       required: true
   - type: textarea
-    id: chain-spec
+    id: chain_spec
     attributes:
       label: (Optional) Upload your Chain Specification
       description: "Example: https://github.com/paritytech/polkadot/blob/master/node/service/res/rococo.json"
@@ -79,7 +79,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: what-else
+    id: what_else
     attributes:
       label: Anything else we should know?
       description: Please let the Rococo team know anything else about this request, and details about your
@@ -87,7 +87,7 @@ body:
     validations:
       required: false
   - type: textarea
-    id: apps-ui-pr
+    id: apps_ui_pr
     attributes:
       label: Register your Rococo parachain details for `polkadot-js/apps`
       description: |

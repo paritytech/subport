@@ -1,11 +1,6 @@
 use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::{
-    calls::{
-        create_batch_all_call, create_force_register_call, create_force_transfer_call,
-        create_scheduled_assign_slots_call, create_scheduled_remove_lock_call, sign_and_send_call,
-        Call,
-    },
     chain_connector::{kusama_connection, polkadot_connection, rococo_connection},
     utils::{has_slot_in_rococo, is_registered, needs_perm_slot, calculate_sovereign_account, parse_validation_code, get_file_content},
     calls::{Call, create_batch_all_call, create_force_transfer_call,

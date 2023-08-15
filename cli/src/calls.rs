@@ -1,6 +1,6 @@
-use subxt::{utils::AccountId32};
-use subxt::{OnlineClient, PolkadotConfig};
 use crate::utils::{get_signer, get_sudo_account};
+use subxt::utils::AccountId32;
+use subxt::{OnlineClient, PolkadotConfig};
 
 // #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 // pub mod rococo {}
@@ -120,10 +120,7 @@ pub fn create_scheduled_remove_lock_call(para_id: u32) -> Result<Call, Box<dyn s
 //
 // Creates a sudo call wrapping the given call
 //
-pub fn create_sudo_call(
-    call: Call,
-) -> Result<Call, Box<dyn std::error::Error>> {
-    
+pub fn create_sudo_call(call: Call) -> Result<Call, Box<dyn std::error::Error>> {
     let sudo_call = Call::Sudo(SudoCall::sudo {
         call: Box::new(call),
     });
@@ -137,12 +134,11 @@ pub fn create_sudo_call(
 pub async fn sign_and_send_proxy_call(
     api: OnlineClient<PolkadotConfig>,
     call: Call,
-) ->  Result<(), Box<dyn std::error::Error>> {
-
+) -> Result<(), subxt::Error> {
     let utx = rococo::tx().proxy().proxy(
         subxt::utils::MultiAddress::Id(get_sudo_account()),
         None,
-        call
+        call,
     );
 
     api.tx()

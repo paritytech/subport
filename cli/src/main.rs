@@ -1,11 +1,15 @@
 use clap::Parser;
 use dotenv::dotenv;
 use para_onboarding::{
+    calls::{
+        create_batch_all_call, create_force_register_call, create_force_transfer_call,
+        create_scheduled_assign_slots_call, create_scheduled_remove_lock_call, create_sudo_call,
+        sign_and_send_proxy_call, Call,
+    },
     chain_connector::{kusama_connection, polkadot_connection, rococo_connection},
-    utils::{has_slot_in_rococo, is_registered, needs_perm_slot, calculate_sovereign_account, parse_validation_code, get_file_content},
-    calls::{Call, create_batch_all_call, create_force_transfer_call,
-        create_force_register_call, create_scheduled_assign_slots_call,
-        create_scheduled_remove_lock_call, create_sudo_call, sign_and_send_proxy_call
+    utils::{
+        calculate_sovereign_account, get_file_content, has_slot_in_rococo, is_registered,
+        needs_perm_slot, parse_validation_code,
     },
 };
 use sp_core::sr25519::Pair;
@@ -107,6 +111,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let sudo_call = create_sudo_call(batch_call).unwrap();
 
     // Sign and send batch_call to the network
-    sign_and_send_proxy_call(rococo_api, sudo_call).await
-
+    if let Err(subxt::Error::Runtime(dispatch_err)) =
+        sign_and_send_proxy_call(rococo_api, sudo_call).await
+    {
+        eprintln!("{dispatch_err}");
+    }
+    Ok(())
 }

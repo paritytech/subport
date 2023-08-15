@@ -34,7 +34,7 @@ The metadata used for subxt has been queried with:
 subxt metadata --url https://rpc.polkadot.io:443 -f bytes > metadata/polkadot_metadata.scale
 subxt metadata --url https://kusama-rpc.polkadot.io:443 -f bytes >  metadata/kusama_metadata.scale
 subxt metadata --url https://rococo-rpc.polkadot.io:443 -f bytes >  metadata/rococo_metadata.scale
-subxt metadata -f bytes >  metadata/local_metadata.scale  
+subxt metadata --url http://127.0.0.1:9944 -f bytes > metadata/local_metadata.scale   
 ```
 
 ### Secret Keys

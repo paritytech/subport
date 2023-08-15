@@ -137,7 +137,7 @@ pub fn create_sudo_call(
 pub async fn sign_and_send_proxy_call(
     api: OnlineClient<PolkadotConfig>,
     call: Call,
-) ->  Result<(), Box<dyn std::error::Error>> {
+) ->  Result<(), subxt::Error> {
 
     let utx = rococo::tx().proxy().proxy(
         subxt::utils::MultiAddress::Id(get_sudo_account()),

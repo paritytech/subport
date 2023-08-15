@@ -107,6 +107,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let sudo_call = create_sudo_call(batch_call).unwrap();
 
     // Sign and send batch_call to the network
-    sign_and_send_proxy_call(rococo_api, sudo_call).await
+    if let Err(subxt::Error::Runtime(dispatch_err)) = sign_and_send_proxy_call(rococo_api, sudo_call).await {
+        eprintln!("{dispatch_err}"); 
+    }
+    Ok(())
 
 }

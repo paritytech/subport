@@ -1,6 +1,9 @@
 name: Rococo Slot Request
 description: "Please use this issue for requests related to your slot on Rococo"
 labels: [Rococo]
+assignees:
+  - al3mart
+  - AlexD10S
 body:
   - type: markdown
     attributes:

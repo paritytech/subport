@@ -32,6 +32,7 @@ jobs:
         working-directory: cli
         run: cargo run "${{ steps.issue-parser.outputs.issueparser_para_id }}" "${{ steps.issue-parser.outputs.issueparser_manager_account }}" -g "${{ steps.issue-parser.outputs.issueparser_genesis }}" -v "${{ steps.issue-parser.outputs.issueparser_wasm }}"
         env:
+          SUDO_ACCOUNT: ${{ secrets.SUDO_ACCOUNT }}
           SEED: ${{ secrets.SEED }}
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}

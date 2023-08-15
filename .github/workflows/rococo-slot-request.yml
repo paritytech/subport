@@ -49,7 +49,7 @@ jobs:
   comment_failure:
     runs-on:  macos-latest
     needs: [run, close_issue]
-    permissionS:
+    permissions:
       issues: write
     if: ${{ always() && contains(needs.*.result, 'failure') }}
     steps:

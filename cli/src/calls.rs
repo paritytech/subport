@@ -1,6 +1,6 @@
-use crate::utils::get_signer;
-use subxt::utils::AccountId32;
+use subxt::{utils::AccountId32};
 use subxt::{OnlineClient, PolkadotConfig};
+use crate::utils::{get_signer, get_sudo_account};
 
 // #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 // pub mod rococo {}
@@ -17,6 +17,7 @@ type AssignSlotsCall = rococo::runtime_types::polkadot_runtime_common::assigned_
 type SchedulerCall = rococo::runtime_types::pallet_scheduler::pallet::Call;
 type BalancesCall = rococo::runtime_types::pallet_balances::pallet::Call;
 type UtilityCall = rococo::runtime_types::pallet_utility::pallet::Call;
+type SudoCall = rococo::runtime_types::pallet_sudo::pallet::Call;
 
 const BLOCKS_SCHEDULED: u32 = 1205; // 2 epochs (600*2) + 5 blocks of margin
 const REGISTER_DEPOSIT: u128 = 10_000;
@@ -116,12 +117,33 @@ pub fn create_scheduled_remove_lock_call(para_id: u32) -> Result<Call, Box<dyn s
     Ok(scheduled_call)
 }
 
+//
+// Creates a sudo call wrapping the given call
+//
+pub fn create_sudo_call(
+    call: Call,
+) -> Result<Call, Box<dyn std::error::Error>> {
+    
+    let sudo_call = Call::Sudo(SudoCall::sudo {
+        call: Box::new(call),
+    });
+
+    Ok(sudo_call)
+}
+
+//
 // Sign and send the passed call and waits for
-pub async fn sign_and_send_call(
+//
+pub async fn sign_and_send_proxy_call(
     api: OnlineClient<PolkadotConfig>,
     call: Call,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let utx = rococo::tx().sudo().sudo(call);
+) ->  Result<(), Box<dyn std::error::Error>> {
+
+    let utx = rococo::tx().proxy().proxy(
+        subxt::utils::MultiAddress::Id(get_sudo_account()),
+        None,
+        call
+    );
 
     api.tx()
         .sign_and_submit_then_watch_default(&utx, &get_signer())

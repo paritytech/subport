@@ -5,6 +5,7 @@ use sp_core::{
 };
 use sp_runtime::MultiSigner;
 use subxt::{tx::PairSigner, utils::AccountId32, OnlineClient, PolkadotConfig};
+use std::str::FromStr;
 
 use crate::query::{maybe_leases, paras_registered};
 
@@ -26,6 +27,11 @@ pub fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
     PairSigner::new(pair)
 }
 
+pub fn get_sudo_account() -> AccountId32 {
+    let sudo_account = std::env::var("SUDO_ACCOUNT").expect("Error: No SEED provided");
+    AccountId32::from_str(&sudo_account).unwrap()
+}
+
 pub async fn get_file_content(uri_or_content: String) -> String {
     // If the string contains "https://" and "[", "]" and "(", ")" then it is a URI, download file
     if uri_or_content.contains("https://")
@@ -39,7 +45,7 @@ pub async fn get_file_content(uri_or_content: String) -> String {
         let content = download_file(parsed_uri[0].to_string()).await;
         return content;
     } else {
-        // Otherwise is a raw content
+        // Otherwise is raw content
         return uri_or_content;
     }
 }

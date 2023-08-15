@@ -56,7 +56,7 @@ body:
       description: "If short-term, please **double-check the paraID you registered as a parathread is in place**. If long-term, please ensure your paraID from Kusama/Polkadot is free/unused on Rococo."
       options:
         - "Short-term: we registered a parathread with the paraID above."
-        - "Long-term: we have a matching paraID in use on Polkadot or Kusama."
+        - "Long-term: we have secured a slot on Polkadot or Kusama."
     validations:
       required: true
   - type: textarea

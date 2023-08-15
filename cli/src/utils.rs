@@ -28,7 +28,7 @@ pub fn get_signer() -> PairSigner<PolkadotConfig, sp_core::sr25519::Pair> {
 }
 
 pub fn get_sudo_account() -> AccountId32 {
-    let sudo_account = std::env::var("SUDO_ACCOUNT").expect("Error: No SEED provided");
+    let sudo_account = std::env::var("SUDO_ACCOUNT").expect("Error: No SUDO_ACCOUNT provided");
     AccountId32::from_str(&sudo_account).unwrap()
 }
 

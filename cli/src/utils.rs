@@ -1,11 +1,9 @@
 use scale::Encode;
-use sp_core::{
-    crypto::{Ss58AddressFormatRegistry, Ss58Codec},
-};
+use sp_core::crypto::{Ss58AddressFormatRegistry, Ss58Codec};
 use sp_runtime::MultiSigner;
-use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
-use subxt_signer::{sr25519::Keypair, bip39::Mnemonic};
 use std::str::FromStr;
+use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
+use subxt_signer::{bip39::Mnemonic, sr25519::Keypair};
 
 use crate::query::{maybe_leases, paras_registered};
 

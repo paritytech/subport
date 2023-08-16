@@ -140,6 +140,7 @@ pub async fn sign_and_send_proxy_call(
         None,
         call,
     );
+    println!("sign and send");
 
     api.tx()
         .sign_and_submit_then_watch_default(&utx, &get_signer())

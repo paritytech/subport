@@ -36,22 +36,20 @@ jobs:
           SEED: ${{ secrets.SEED }}
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
-  close_issue:
-    runs-on: macos-latest
-    needs: [run]
-    permissions:
-      issues: write
-    steps:
-      - name: Close issue
-        run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      
+       - name: Close issue
+         run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
+         env:
+           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
   comment_failure:
     runs-on:  macos-latest
-    needs: [run, close_issue]
+    needs: [run]
     permissions:
       issues: write
     if: ${{ always() && contains(needs.*.result, 'failure') }}
     steps:
       - name: Post comment
         run: gh issue comment ${{ github.event.issue.number }} --body "Something went wrong during the onboarding process, @AlexD10S \n This is an automated message. "
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -28,7 +28,7 @@ jobs:
           template-path: .github/ISSUE_TEMPLATE/rococo.yaml # optional but recommended
 
       - name: Run CLI App
-        id: expected
+        id: onboard
         working-directory: cli
         run: cargo run "${{ steps.issue-parser.outputs.issueparser_para_id }}" "${{ steps.issue-parser.outputs.issueparser_manager_account }}" -g "${{ steps.issue-parser.outputs.issueparser_genesis }}" -v "${{ steps.issue-parser.outputs.issueparser_wasm }}"
         env:
@@ -38,6 +38,7 @@ jobs:
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
       
       - name: Close issue
+        if: steps.onboard.outcome == 'success'
         run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

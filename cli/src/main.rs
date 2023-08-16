@@ -69,10 +69,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialise an empty call buffer
     let mut call_buffer: Vec<Call> = Vec::<Call>::new();
 
-    // If the ParaID is not registered (Parachain or Parathread) register it with sudo
+    // If the ParaID is not registered register it with sudo
     let is_registered = is_registered(rococo_api.clone(), para_id.clone()).await;
     if !is_registered.unwrap() {
-        println!("ParaId is not registered");
+        println!("ParaId is not registered, registering now.");
         // Add call to send funds to `manager_account`
         call_buffer.push(create_force_transfer_call(manager_account.clone()).unwrap());
 
@@ -80,7 +80,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let validation_code = get_file_content(args.path_validation_code).await;
 
         let genesis_bytes = genesis_head.as_bytes().to_vec();
-        println!("got Genesis file got");
+        println!("got Genesis file");
         let validation_code_bytes = parse_validation_code(validation_code);
         println!("got WASM file");
 
@@ -93,7 +93,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .unwrap(),
         );
-        println!("force_register call preapred");
+        println!("force_register call preapred \n {}", call_buffer[call_buffer.len - 1]);
     }
 
     // Add call to send funds to paras sovereign account
@@ -117,13 +117,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("batch calls");
     // Create a SUDO call
     let sudo_call = create_sudo_call(batch_call).unwrap();
-    println!("srearte sudo call");
+    println!("crearte sudo call");
 
     // Sign and send batch_call to the network
     if let Err(subxt::Error::Runtime(dispatch_err)) =
         sign_and_send_proxy_call(rococo_api, sudo_call).await
     {
-        eprintln!("{dispatch_err}");
+        eprintln!("Could not dispatch the call: {}", dispatch_err);
     }
     Ok(())
 }

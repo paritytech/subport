@@ -93,7 +93,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
             .unwrap(),
         );
-        println!("force_register call preapred \n {}", call_buffer[call_buffer.len - 1]);
+        println!("force_register call preapred \n {:?}", call_buffer[call_buffer.len() - 1]);
     }
 
     // Add call to send funds to paras sovereign account
@@ -101,23 +101,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         create_force_transfer_call(calculate_sovereign_account::<Pair>(para_id.clone()).unwrap())
             .unwrap(),
     );
-    println!("send funds to soveregins account call prepared");
+    println!("send funds to soveregins account call prepared\n {:?}", call_buffer[call_buffer.len() - 1]);
 
     // Add call to schedule assigning a slot to the given para
     call_buffer.push(create_scheduled_assign_slots_call(para_id.clone(), is_perm_slot).unwrap());
 
-    println!("create_scheduled_assign_slots_call prepared");
+    println!("create_scheduled_assign_slots_call prepared\n {:?}", call_buffer[call_buffer.len() - 1]);
     // Add call to schedule removing the manager lock from the given para
     call_buffer.push(create_scheduled_remove_lock_call(para_id).unwrap());
 
-    println!("create_scheduled_remove_lock_call prepared");
+    println!("create_scheduled_remove_lock_call prepared\n {:?}", call_buffer[call_buffer.len() - 1]);
     // Get the batched call based on the calls present in buffer
     let batch_call = create_batch_all_call(call_buffer).unwrap();
 
     println!("batch calls");
     // Create a SUDO call
     let sudo_call = create_sudo_call(batch_call).unwrap();
-    println!("crearte sudo call");
+    println!("crearte sudo call\n {:?}", call_buffer[call_buffer.len() - 1]);
 
     // Sign and send batch_call to the network
     if let Err(subxt::Error::Runtime(dispatch_err)) =

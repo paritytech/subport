@@ -37,10 +37,10 @@ jobs:
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
       
-       - name: Close issue
-         run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
-         env:
-           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Close issue
+        run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
   comment_failure:
     runs-on:  macos-latest

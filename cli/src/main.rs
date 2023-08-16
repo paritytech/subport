@@ -117,7 +117,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("batch calls");
     // Create a SUDO call
     let sudo_call = create_sudo_call(batch_call).unwrap();
-    println!("crearte sudo call\n {:?}", call_buffer[call_buffer.len() - 1]);
+    println!("crearte sudo call\n {:?}", &sudo_call);
 
     // Sign and send batch_call to the network
     if let Err(subxt::Error::Runtime(dispatch_err)) =

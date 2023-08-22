@@ -2,10 +2,10 @@ use crate::utils::{get_signer, get_sudo_account};
 use subxt::utils::AccountId32;
 use subxt::{OnlineClient, PolkadotConfig};
 
-// #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
-// pub mod rococo {}
-#[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
+#[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 pub mod rococo {}
+// #[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
+// pub mod rococo {}
 
 use rococo::runtime_types::polkadot_parachain::primitives::Id as RococoId;
 use rococo::runtime_types::polkadot_parachain::primitives::{HeadData, ValidationCode};
@@ -140,7 +140,6 @@ pub async fn sign_and_send_proxy_call(
         None,
         call,
     );
-    println!("sign and send");
 
     api.tx()
         .sign_and_submit_then_watch_default(&utx, &get_signer())

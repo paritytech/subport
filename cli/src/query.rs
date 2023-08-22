@@ -7,10 +7,10 @@ pub mod polkadot {}
 #[subxt::subxt(runtime_metadata_path = "metadata/kusama_metadata.scale")]
 pub mod kusama {}
 
-// #[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
-// pub mod rococo {}
-#[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
+#[subxt::subxt(runtime_metadata_path = "metadata/rococo_metadata.scale")]
 pub mod rococo {}
+// #[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
+// pub mod rococo {}
 
 use kusama::runtime_types::polkadot_parachain::primitives::Id as KusamaId;
 use polkadot::runtime_types::polkadot_parachain::primitives::Id;

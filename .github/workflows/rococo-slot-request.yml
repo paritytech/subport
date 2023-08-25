@@ -1,0 +1,56 @@
+name: "Handle Rococo Slot Request"
+
+on:
+  issues:
+    types: [labeled]
+
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Number of the issue to use as source'
+        type: string
+        required: true
+
+jobs:
+  run:
+    runs-on: macos-latest
+    if: github.event.label.name == 'Rococo'
+    steps:
+      - name: Checkout  # Clone git repository
+        uses: actions/checkout@v3
+
+      - name: Install stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - uses: stefanbuck/github-issue-parser@v3
+        id: issue-parser
+        with:
+          template-path: .github/ISSUE_TEMPLATE/rococo.yaml # optional but recommended
+
+      - name: Run CLI App
+        id: onboard
+        working-directory: cli
+        run: cargo run "${{ steps.issue-parser.outputs.issueparser_para_id }}" "${{ steps.issue-parser.outputs.issueparser_manager_account }}" -g "${{ steps.issue-parser.outputs.issueparser_genesis }}" -v "${{ steps.issue-parser.outputs.issueparser_wasm }}"
+        env:
+          SUDO_ACCOUNT: ${{ secrets.SUDO_ACCOUNT }}
+          SEED: ${{ secrets.SEED }}
+          FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}
+          ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
+      
+      - name: Close issue
+        if: steps.onboard.outcome == 'success'
+        run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  comment_failure:
+    runs-on:  macos-latest
+    needs: [run]
+    permissions:
+      issues: write
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
+    steps:
+      - name: Post comment
+        run: gh issue comment ${{ github.event.issue.number }} --body "Something went wrong during the onboarding process, @AlexD10S \n This is an automated message. "
+        env:
+          GH_TOKEN: ${{ github.token }}

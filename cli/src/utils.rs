@@ -5,7 +5,7 @@ use std::str::FromStr;
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 use subxt_signer::{bip39::Mnemonic, sr25519::Keypair};
 
-use crate::query::{maybe_leases, paras_registered, next_free_para};
+use crate::query::{maybe_leases, next_free_para, paras_registered};
 
 // Rococo types
 #[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]

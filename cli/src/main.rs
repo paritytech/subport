@@ -4,12 +4,12 @@ use para_onboarding::{
     calls::{
         create_batch_all_call, create_force_register_call, create_force_transfer_call,
         create_scheduled_assign_slots_call, create_scheduled_remove_lock_call, create_sudo_call,
-        sign_and_send_proxy_call, reserve, Call,
+        reserve, sign_and_send_proxy_call, Call,
     },
     chain_connector::{kusama_connection, polkadot_connection, rococo_connection},
     utils::{
-        calculate_sovereign_account, get_file_content, has_slot_in_rococo, is_registered,
-        needs_perm_slot, parse_validation_code, get_next_free_para
+        calculate_sovereign_account, get_file_content, get_next_free_para, has_slot_in_rococo,
+        is_registered, needs_perm_slot, parse_validation_code,
     },
 };
 use sp_core::sr25519::Pair;
@@ -60,8 +60,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await
         .unwrap_or(false);
 
-    // If needs a permanent slot, check if the paraId has been reserved and if not, reserve it in Rococo 
-    // 
+    // If needs a permanent slot, check if the paraId has been reserved and if not, reserve it in Rococo
+    //
     // If paraId < nextParaId needs means is reserved,
     // If paraId = nextParaId needs to be reserved
     // If paraId > nextParaId throws an Error, because teh para_id indicated should be the nextParaId
@@ -69,13 +69,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         println!("ParaId: {} needs a temporary slot", para_id.clone());
         let next_para_id = get_next_free_para(rococo_api.clone()).await?;
         if next_para_id == para_id.clone() {
-            if let Err(subxt::Error::Runtime(dispatch_err)) =
-            reserve(rococo_api.clone()).await
-            {
-                eprintln!("Could not dispatch the call to reserve the para_id: {}", dispatch_err);
+            if let Err(subxt::Error::Runtime(dispatch_err)) = reserve(rococo_api.clone()).await {
+                eprintln!(
+                    "Could not dispatch the call to reserve the para_id: {}",
+                    dispatch_err
+                );
             }
-        }
-        else if  next_para_id < para_id {
+        } else if next_para_id < para_id {
             println!(
                 "Error: ParaId: {} is not reserved and is not the next free para id",
                 args.para_id.clone()

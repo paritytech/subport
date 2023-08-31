@@ -5,7 +5,7 @@ use std::str::FromStr;
 use subxt::{utils::AccountId32, OnlineClient, PolkadotConfig};
 use subxt_signer::{bip39::Mnemonic, sr25519::Keypair};
 
-use crate::query::{maybe_leases, paras_registered};
+use crate::query::{maybe_leases, paras_registered, next_free_para};
 
 // Rococo types
 #[subxt::subxt(runtime_metadata_path = "metadata/local_metadata.scale")]
@@ -102,6 +102,13 @@ pub async fn has_slot_in_rococo(
     } else {
         Ok(false)
     }
+}
+
+// Check if the next free para available in in Rococo is grater than ours
+pub async fn get_next_free_para(
+    rococo_api: OnlineClient<PolkadotConfig>,
+) -> Result<u32, Box<dyn std::error::Error>> {
+    Ok(next_free_para(rococo_api).await)
 }
 
 // Check if the parachain is registerd  in Rococo

@@ -33,6 +33,22 @@ pub fn create_batch_all_call(calls: Vec<Call>) -> Result<Call, Box<dyn std::erro
 }
 
 //
+// Reserve the next para_id available in Rococo
+//
+pub async fn reserve(api: OnlineClient<PolkadotConfig>) -> Result<(), subxt::Error> {
+    let root = get_signer();
+
+    let tx = rococo::tx().registrar().reserve();
+
+    api.tx()
+        .sign_and_submit_then_watch_default(&tx, &root)
+        .await?
+        .wait_for_finalized_success()
+        .await?;
+    Ok(())
+}
+
+//
 // Fund the parachain manager from the faucet address using sudo
 //
 pub fn create_force_transfer_call(

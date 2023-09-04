@@ -37,7 +37,24 @@ pub async fn maybe_leases(
 }
 
 //
-// Checks if paraId is already registered
+// Check the next free para available in in Rococo
+//
+pub async fn next_free_para(api: OnlineClient<PolkadotConfig>) -> u32 {
+    let query = rococo::storage().registrar().next_free_para_id();
+    let id = api
+        .storage()
+        .at_latest()
+        .await
+        .expect("Error getting the next free para id")
+        .fetch(&query)
+        .await
+        .unwrap()
+        .expect("Error getting the next free para id");
+    id.0
+}
+
+//
+// Checks if paraId is already registered in Rococo
 //
 pub async fn paras_registered(
     api: OnlineClient<PolkadotConfig>,

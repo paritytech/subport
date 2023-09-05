@@ -41,11 +41,18 @@ jobs:
           ROCOCO_URI: ${{ secrets.ROCOCO_URI }}
         run: cargo run $PARA_ID $MANAGER_ACCOUNT -g $GENESIS -v $WASM
 
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+
       - name: Close issue
         if: steps.onboard.outcome == 'success'
         run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
 
   comment_failure:
     runs-on:  macos-latest

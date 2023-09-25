@@ -26,15 +26,17 @@ jobs:
         id: issue-parser
         with:
           template-path: .github/ISSUE_TEMPLATE/rococo.yaml # optional but recommended
+      
+      - run: cat ${HOME}/issue-parser-result.json
 
       - name: Run CLI App
         id: onboard
         working-directory: cli
         env:
-          PARA_ID: ${{ steps.issue-parser.outputs.issueparser_paraid }}
-          MANAGER_ACCOUNT: ${{ steps.issue-parser.outputs.issueparser_parachain_manager_account }}
-          GENESIS: ${{ steps.issue-parser.outputs.issueparser_upload_your_genesis_head_genesis_state__do_not_submit_a_compressed_file }}
-          WASM: ${{ steps.issue-parser.outputs.issueparser_upload_your_validation_code_genesis_runtime_wasm__do_not_submit_a_compressed_file }}
+          PARA_ID: ${{ steps.issue-parser.outputs.issueparser_para_id }}
+          MANAGER_ACCOUNT: ${{ steps.issue-parser.outputs.issueparser_manager_account }}
+          GENESIS: ${{ steps.issue-parser.outputs.issueparser_genesis }}
+          WASM: ${{ steps.issue-parser.outputs.issueparser_wasm }}
           SUDO_ACCOUNT: ${{ secrets.SUDO_ACCOUNT }}
           SEED: ${{ secrets.SEED }}
           FAUCET_ADDRESS: ${{ secrets.FAUCET_ADDRESS }}

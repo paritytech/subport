@@ -62,14 +62,14 @@ body:
   - type: textarea
     id: genesis
     attributes:
-      label: Upload your Genesis Head (genesis state) - Do not submit a compressed file.
+      label: Upload your Genesis Head (genesis state) - Do not submit or link to a compressed file.
       placeholder: Drag & drop or upload the genesis file, or provide a link to this file to download
     validations:
       required: true
   - type: textarea
     id: wasm
     attributes:
-      label: Upload your Validation Code (genesis runtime Wasm) - Do not submit a compressed file.
+      label: Upload your Validation Code (genesis runtime Wasm) - Do not submit or link to a compressed file.
       placeholder: Drag & drop or upload the Wasm runtime file associated with your genesis
     validations:
       required: true
@@ -82,11 +82,11 @@ body:
     validations:
       required: false
   - type: textarea
-    id: what_else
+    id: hrmp_channels
     attributes:
-      label: Anything else we should know?
-      description: Please let the Rococo team know anything else about this request, and details about your
-      value: So... We want to start a XCM channel with X parachain with Y paraID...
+      label: HRMP channels?
+      description: Please, write down the ParaIds of the parachains you would need HRMP channels to be set, if any.
+      value: 1000,1001,1002...
     validations:
       required: false
   - type: textarea

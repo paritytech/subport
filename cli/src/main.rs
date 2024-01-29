@@ -115,9 +115,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         create_force_transfer_call(calculate_sovereign_account::<Pair>(para_id.clone()).unwrap())
             .unwrap(),
     );
-
-    // Add call to schedule assigning a slot to the given para
-    call_buffer.push(create_scheduled_assign_slots_call(para_id.clone(), is_perm_slot).unwrap());
+    //TODO: Assign bulk coretime if perm slots
 
     // Add call to schedule removing the manager lock from the given para
     call_buffer.push(create_scheduled_remove_lock_call(para_id).unwrap());

@@ -87,33 +87,6 @@ pub fn create_force_register_call(
     Ok(call)
 }
 
-//
-// Creates a call to schedule an assign perm / tmp slot call
-//
-pub fn create_scheduled_assign_slots_call(
-    para_id: u32,
-    is_permanent_slot: bool,
-) -> Result<Call, Box<dyn std::error::Error>> {
-    // Temporary slots by default, and if is_permanent_slot is true, then permanent slots
-    let mut call = Call::AssignedSlots(AssignSlotsCall::assign_temp_parachain_slot {
-        id: RococoId(para_id),
-        lease_period_start: Current,
-    });
-    if is_permanent_slot {
-        call = Call::AssignedSlots(AssignSlotsCall::assign_perm_parachain_slot {
-            id: RococoId(para_id),
-        });
-    }
-
-    let scheduled_call = Call::Scheduler(SchedulerCall::schedule_after {
-        after: BLOCKS_SCHEDULED,
-        maybe_periodic: None,
-        priority: 0,
-        call: Box::new(call),
-    });
-
-    Ok(scheduled_call)
-}
 
 //
 // Creates a call to remove the manager lock from the given para

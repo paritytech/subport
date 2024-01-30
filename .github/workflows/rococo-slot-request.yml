@@ -52,7 +52,7 @@ jobs:
 
       - name: Close issue
         if: steps.onboard.outcome == 'success'
-        run: gh issue close ${{ github.event.issue.number }} -r completed -c "Parachain is now being onboarded."
+        run: gh issue comment ${{ github.event.issue.number }} --body "Parachain is now being onboarded. Go to the Coretime parachain to Purchase Coretime. "
         env:
           GH_TOKEN: ${{ steps.generate_token.outputs.token }}
 
@@ -64,6 +64,6 @@ jobs:
     if: ${{ always() && contains(needs.*.result, 'failure') }}
     steps:
       - name: Post comment
-        run: gh issue comment ${{ github.event.issue.number }} --body "Something went wrong during the onboarding process, @AlexD10S \n This is an automated message. "
+        run: gh issue comment ${{ github.event.issue.number }} --body "Something went wrong during the onboarding process \n This is an automated message. "
         env:
           GH_TOKEN: ${{ github.token }}

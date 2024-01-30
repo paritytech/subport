@@ -2,8 +2,7 @@ name: Rococo Slot Request
 description: "Please use this issue for requests related to your slot on Rococo"
 labels: [Rococo]
 assignees:
-  - al3mart
-  - AlexD10S
+  - NM2146
 body:
   - type: markdown
     attributes:
@@ -47,16 +46,6 @@ body:
       label: Parachain Manager Account
       description: "A Rococo account that would be set as the manager for this parachain. You might have already set one if you have registered the parachain on your own, please use the same account when filling this field."
       placeholder: "Example:5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
-    validations:
-      required: true
-  - type: dropdown
-    id: para_id_term
-    attributes:
-      label: Is this for a short or long term slot?
-      description: "If short-term, please **double-check the paraID you registered as a parathread is in place**. If long-term, please ensure your paraID from Kusama/Polkadot is free/unused on Rococo."
-      options:
-        - "Short-term: we registered a parathread with the paraID above."
-        - "Long-term: we have secured a slot on Polkadot or Kusama."
     validations:
       required: true
   - type: textarea
